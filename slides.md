@@ -43,7 +43,7 @@ Topic: Property $\alpha$ for $\text{SOA}$ of strength 3 with 3 levels
 
 <br>
 
-Presenter: Heng-Tse, Chou
+Presenter: Heng-Tse Chou @ NTHU STAT
 
 Date: Mar 13, 2024
 
