@@ -36,8 +36,7 @@ math: mathjax
 
 <!-- _class: cover -->
 
-
-# Weekly Meeting 
+# Weekly Meeting
 
 Topic: Property $\alpha$ for $\text{SOA}$ of strength 3 with 3 levels
 
@@ -68,7 +67,6 @@ $D$ exists if and only if $A$, $B$ and $C$ exist such that $(a_i, a_j, a_u)$, $(
 
 They are linked through $D = s^2 A + sB +C$.
 
-
 ---
 
 ## Recap
@@ -81,14 +79,12 @@ An $\text{SOA}(n, m, s^3, 3)$ as characterized in Lemma 1 through $A$, $B$ and $
 
 ## Recap
 
-
 **Theorem 1. (from Shi and Tang, 2020)**
 
-If an $\text{SOA}(n, m, s^3, 3)$ for $s=2$ is to be constructed using regular $A$, $B$, and $C$ with their columns selected from a saturated design $S$, then it has property $\alpha$ if and only if: 
+If an $\text{SOA}(n, m, s^3, 3)$ for $s=2$ is to be constructed using regular $A$, $B$, and $C$ with their columns selected from a saturated design $S$, then it has property $\alpha$ if and only if:
 
 1. $A$ is of resolution $IV$ or higher
-2.  $(A, B, B')$ has resolution $III$ or higher, that is, no repeated columns, where $B' = (b'_1, \dots, b'_m)$ with $b'_j = a_jb_j$
-
+2. $(A, B, B')$ has resolution $III$ or higher, that is, no repeated columns, where $B' = (b'_1, \dots, b'_m)$ with $b'_j = a_jb_j$
 
 ---
 
@@ -117,7 +113,7 @@ $\longrightarrow$ $(A, B, B')$ having no repeated columns can assure this
 
 ---
 
-## Breaking down 
+## Breaking down
 
 Finally, to choose $c_j:$
 
@@ -140,7 +136,7 @@ $\longrightarrow$ All requirements from Lemma 1 and Proposition 1 (i) are satisi
 
 ## To sum up
 
-If an $\text{SOA}(n, m, s^3, 3)$ for $s=3$ is to be constructed using regular $A$, $B$, and $C$ with their columns selected from a saturated design $S$, then it has property $\alpha$ if and only if: 
+If an $\text{SOA}(n, m, s^3, 3)$ for $s=3$ is to be constructed using regular $A$, $B$, and $C$ with their columns selected from a saturated design $S$, then it has property $\alpha$ if and only if:
 
 1. $A$ is of resolution $IV$ or higher
-2. $(A, B, B', B'')$ has resolution $III$ or higher where $B' = (b'_1, \dots, b'_m)$ with $b'_j = a_jb_j$, and $B'' = (b''_1, \dots, b''_m)$ with $b''_j = a_jb_j^2$.   
+2. $(A, B, B', B'')$ has resolution $III$ or higher where $B' = (b'_1, \dots, b'_m)$ with $b'_j = a_jb_j$, and $B'' = (b''_1, \dots, b''_m)$ with $b''_j = a_jb_j^2$.
