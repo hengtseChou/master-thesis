@@ -1,3 +1,4 @@
 #!/bin/bash
 cd "$(git rev-parse --show-toplevel)"
 marp slides.md -o slides.pdf
+git add slides.pdf
