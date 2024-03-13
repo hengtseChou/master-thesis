@@ -123,7 +123,7 @@ Finally, to choose $c_j:$
 
 $\longrightarrow$ Take $c_j$ to be any column other than $a_j$, $b_j$ and $a_jb_j$
 
-$\longrightarrow$ $(a_j, b_j, c_j)$ is $\text{OA}(n, 3, s, 3)$,
+$\longrightarrow$ $(a_j, b_j, c_j)$ is $\text{OA}(n, 3, s, 3)$
 
 $\longrightarrow$ All requirements from Lemma 1 and Proposition 1 (i) are satisified
 
