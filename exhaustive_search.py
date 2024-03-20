@@ -1,24 +1,17 @@
+import argparse
 import json
-import os
-import sys
+import pprint
 from itertools import combinations
+from math import comb
 
 import numpy as np
 from tqdm import tqdm
 
 
 def offseting_effect(effect: np.ndarray) -> np.ndarray:
-    # Find the index of the first non-zero element
-    non_zero_indices = np.nonzero(effect)[0]
-    if len(non_zero_indices) > 0:
-        first_non_zero_index = non_zero_indices[0]
-        first_non_zero_value = effect[first_non_zero_index]
-
-        # If the first non-zero digit is not 1, multiply the array by 2 and mod 3
-        if first_non_zero_value != 1:
-            return (effect * 2) % 3
-
-    # Return the original array if the first non-zero digit is 1 or the array is all zeros
+    non_zero_indices = np.flatnonzero(effect)
+    if non_zero_indices.size > 0 and effect[non_zero_indices[0]] != 1:
+        return (effect * 2) % 3
     return effect
 
 
@@ -32,9 +25,9 @@ def generate_design_C(
     for element_A, element_B in zip(design_A, design_B):
         # Perform the element-wise operation
         element_C = (element_A + element_B) % 3
-        # Apply the offseting_effect_np function to C
-        D_transformed = element_C
-        design_C.append(D_transformed)
+        # Apply the offseting_effect function to C
+        element_C_offset = offseting_effect(element_C)
+        design_C.append(element_C_offset)
 
     return design_C
 
@@ -49,20 +42,17 @@ def generate_design_D(
     for element_A, element_B in zip(design_A, design_B):
         # Perform the element-wise operation
         element_D = (element_A + element_B * 2) % 3
-        # Apply the offseting_effect_np function to D
-        D_transformed = offseting_effect(element_D)
-        design_D.append(D_transformed)
+        # Apply the offseting_effect function to D
+        element_D_offset = offseting_effect(element_D)
+        design_D.append(element_D_offset)
 
     return design_D
 
 
-def filter_effects(effects, design_A):
-    """Filter out arrays in design_A from effects."""
-    remaining_effects = []
-    for effect in effects:
-        if not any(np.array_equal(effect, a) for a in design_A):
-            remaining_effects.append(effect)
-    return remaining_effects
+def filter_effects(effects, exclude):
+    return np.array(
+        [e for e in effects if not any(np.array_equal(e, ex) for ex in exclude)]
+    )
 
 
 def has_repeated_array(*lists_of_arrays):
@@ -70,7 +60,6 @@ def has_repeated_array(*lists_of_arrays):
     checked_arrays = []
     for list_of_arrays in lists_of_arrays:
         for arr in list_of_arrays:
-            # Check if arr is equal to any array we've already checked
             if any(np.array_equal(arr, checked_arr) for checked_arr in checked_arrays):
                 return True
             checked_arrays.append(arr)
@@ -78,30 +67,49 @@ def has_repeated_array(*lists_of_arrays):
 
 
 def nparray_to_tuple(list_of_arrays):
-    return [tuple(arr) for arr in list_of_arrays]
+    return [tuple(map(int, arr)) for arr in list_of_arrays]
 
 
-def add_design_to_file(design: dict[list], json_file_path="result.json"):
-    if not os.path.exists(json_file_path):
-        with open(json_file_path, "w") as file:
-            json.dump([], file)
-    with open(json_file_path, "r+", encoding="utf-8") as file:
-        # Try to load the existing JSON content
-        try:
+def read_json_file(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
             data = json.load(file)
             if not isinstance(data, list):
                 raise ValueError("JSON root is not a list, cannot append data.")
-        except json.JSONDecodeError:
-            # File is empty or not valid JSON; start a new list
-            data = []
+            return data
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
 
-        # Append the new list of tuples
-        data.append(design)
 
-        # Move back to the beginning of the file to overwrite it
-        file.seek(0)
-        # Convert the updated data back to JSON and save it to the file
-        json.dump(data, file, ensure_ascii=False)
+def custom_json_stringify(data):
+    result = "[\n"
+    for obj in data:
+        obj_str = "  {\n"
+        for key, value in obj.items():
+            # Convert list of lists to a single-line JSON string
+            value_str = json.dumps(value).replace("],", "], ")
+            obj_str += f'    "{key}": {value_str},\n'
+        obj_str = (
+            obj_str.rstrip(",\n") + "\n  },\n"
+        )  # Remove the last comma and add closing braces
+        result += obj_str
+    result = (
+        result.rstrip(",\n") + "\n]"
+    )  # Remove the last comma from the result string and add closing bracket
+    return result
+
+
+def write_json_file(json_file_path, data):
+    json_string = custom_json_stringify(data)
+    with open(json_file_path, "w", encoding="utf-8") as file:
+        file.write(json_string)
+
+
+def add_design_to_file(design: dict, json_file_path="result.json"):
+    data = read_json_file(json_file_path)
+    data.append(design)  # Append the new design to the existing data list
+    print(data)
+    write_json_file(json_file_path, data)
 
 
 # (a, b, c, d)
@@ -158,23 +166,20 @@ four_fi = effects[32:40]
 design_As = list(combinations(four_fi, 6))
 design_As = [main_effect + list(candidate) for candidate in design_As]
 
-print(len(design_As))
+parser = argparse.ArgumentParser()
+parser.add_argument("idx", help="index of selecting design A", type=int)
+parser.add_argument(
+    "--first-only", help="print out the first design and exit", action="store_true"
+)
+args = parser.parse_args()
 
-if len(sys.argv) < 2:
-    raise ValueError("need index of possible design A")
-try:
-    idx = int(sys.argv[1])
-except ValueError:
-    raise ValueError("must input valid index")
-if idx < 0 or idx > 27:
-    raise ValueError("must input valid index")
+if args.idx < 0 or args.idx >= len(design_As):
+    raise ValueError("Index out of range.")
 
-design_A = design_As[idx]
 
-print(f"current design A :{nparray_to_tuple(design_A)}")
-
-pbar = tqdm(total=30045015)
+design_A = design_As[args.idx]
 remaining_effects = filter_effects(effects, design_A)
+pbar = tqdm(total=comb(len(remaining_effects), 10))
 
 for design_B in combinations(remaining_effects, 10):
 
@@ -191,7 +196,20 @@ for design_B in combinations(remaining_effects, 10):
                 "design D": nparray_to_tuple(design_D),
             }
         )
-        print("design found. saved to file.")
+        tqdm.write("design found. saved to file.")
     pbar.update(1)
 
-print(f"search with index={idx} completed.")
+    if args.first_only:
+        tqdm.write(
+            pprint.pformat(
+                {
+                    "design A": nparray_to_tuple(design_A),
+                    "design B": nparray_to_tuple(design_B),
+                    "design C": nparray_to_tuple(design_C),
+                    "design D": nparray_to_tuple(design_D),
+                }
+            )
+        )
+        exit()
+
+print(f"search with index={args.idx} completed.")
