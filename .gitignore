@@ -1,2 +1,4 @@
-*.pdf
-!slides.pdf
+paper/
+slides/**
+!slides/slides.md
+!slides/slides.pdf
