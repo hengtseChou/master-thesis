@@ -13,7 +13,7 @@ def _sort_effect(t):
 
 class FullFactorial:
 
-    def __init__(self, k):
+    def __init__(self, k: int) -> None:
         try:
             self.k = int(k)
         except ValueError:
@@ -21,6 +21,9 @@ class FullFactorial:
         if self.k < 2:
             raise ValueError("k must be greater than or equal to 2.")
         self._effects = self._effects_generator()
+
+    def __getitem__(self, idx) -> list[tuple]:
+        return self._effects[idx]
 
     def __str__(self) -> str:
         return pprint.pformat(self._effects)
@@ -37,13 +40,13 @@ class FullFactorial:
         return effects
 
     @property
-    def effects(self):
+    def effects(self) -> list[tuple]:
         return self._effects
 
-    def main_effects(self):
+    def main_effects(self) -> list[tuple]:
         return [effect for effect in self._effects if effect.count(0) == self.k - 1]
 
-    def interactions(self, num_of_factors):
+    def interactions(self, num_of_factors: int) -> list[tuple]:
         try:
             num_of_factors = int(num_of_factors)
         except ValueError:
