@@ -1,6 +1,6 @@
-# Meeting Slides
+# Research - SOA of strength 3 with 3 levels
 
-This is the repo for storing my weekly meeting slides, regarding the research topic of DOE (design of experiments) and SOA (strong orthogonal arrarys). 
+This is the repo for storing my research material (code related), regarding the research topic of DOE (design of experiments) and SOA (strong orthogonal arrarys). 
 
 The sildes are created using [marp](https://marp.app/), a tool that allow creating slides with markdown syntax. Changes between each week are tracked by different git branches.
 
