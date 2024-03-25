@@ -6,8 +6,8 @@ from .utils import offseting_effect
 
 def _sort_effect(t):
     # Count of zeros as the primary key, negative to sort in reverse (more zeros first)
-    zero_count = -t.count(0)
     # The tuple itself as the secondary key for sorting by values when zero counts are the same
+    zero_count = -t.count(0)
     return zero_count, t
 
 
@@ -30,7 +30,6 @@ class FullFactorial:
 
     def _effects_generator(self) -> list[tuple]:
 
-        effects = []
         effects = list(itertools.product(range(3), repeat=self.k))
         effects = [offseting_effect(effect) for effect in effects]
         effects = [effect for effect in set(effects)]

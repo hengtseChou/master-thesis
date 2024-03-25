@@ -7,3 +7,13 @@ def offseting_effect(effect: tuple) -> tuple:
     if non_zero_indices.size > 0 and effect[non_zero_indices[0]] != 1:
         return tuple((effect * 2) % 3)
     return tuple(effect)
+
+
+def interaction_component(a: tuple, b: tuple, power_of_b: int = 1):
+    """Compute the interaction component of a and b, or a and b^2"""
+    if power_of_b not in [1, 2]:
+        raise ValueError("power of b must be 1 or 2.")
+    np_a = np.array(a)
+    np_b = np.array(b)
+    add_up = np_a + np_b * power_of_b
+    return offseting_effect(tuple(add_up))
