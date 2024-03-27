@@ -21,6 +21,12 @@ style: |
   table {
     font-size: 26px;
   }
+  th {
+    background-color: #000000;
+  }
+  td {
+
+  }
   section.cover h1 {
     padding-top: 60px;
     padding-bottom: 10px;
@@ -38,105 +44,92 @@ math: mathjax
 
 # Weekly Meeting
 
-Topic: Property $\alpha$ for $\text{SOA}$ of strength 3 with 3 levels
+Topic: Property $\alpha$ for $\text{SOA}$ of strength 3 with $s = 3$
 
 <br>
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: Mar 13, 2024
+Date: Mar 27, 2024
 
 ---
 
 ## Goal
 
-- Make $\text{SOA}$ of strength 3 with 3 levels having property $\alpha$, that is, **stratification on $s^2 \times s^2$ grids in all two dimensions.**
+- Find similar grouping scheme and permutations to [Wu, C.-F.J. (1989)](https://projecteuclid.org/journals/annals-of-statistics/volume-17/issue-4/Construction-of-2m4n-Designs-via-a-Grouping-Scheme/10.1214/aos/1176347399.full) for $s=3$.
 
 ---
 
-## Recap
+## Permutations
 
-**Lemma 1. (from Shi and Tang 2020)**
+This illustrate the idea under $s=2$.
 
-$D: SOA(n, m, s^3, 3)$
-$A=(a_1, \dots, a_m)$
-$B=(b_1, \dots, b_m)$
-$C=(c_1, \dots, c_m)$
-
-$D$ exists if and only if $A$, $B$ and $C$ exist such that $(a_i, a_j, a_u)$, $(a_i, a_j, b_j)$ and $(a_i, b_i, c_i)$ are $OA(n, 3, s, 3)s$ for all $i\neq j$, $i\neq u$ and $j \neq u$.
-
-They are linked through $D = s^2 A + sB +C$.
+- $B_k$: all effects for a full factorial of $k$ independent factors plus $I$.
+- All the elements in $B_k$ can be expressed as $w_i = w_{\pi(i)} \cdot w_{r(i)}$.
+- Then, the exclusive sets $(w_{\pi(i)}\cdot (k+1))$, $(w_{r(i)}\cdot (k+2))$, $(w_i\cdot (k+1)(k+2))$, each of which is of the form $(\alpha, \beta, \alpha \cdot \beta)$ for $k=4$.
 
 ---
 
-## Recap
+## Permutations
 
-**Proposition 1. (i) (from Shi and Tang, 2020)**
-
-An $\text{SOA}(n, m, s^3, 3)$ as characterized in Lemma 1 through $A$, $B$ and $C$ has property $\alpha$ if and only if $(a_i, b_i, a_j, b_j)$ is an $OA(n, 4, s, 4)$ for all $i \neq j$.
-
----
-
-## Recap
-
-**Theorem 1. (from Shi and Tang, 2020)**
-
-If an $\text{SOA}(n, m, s^3, 3)$ for $s=2$ is to be constructed using regular $A$, $B$, and $C$ with their columns selected from a saturated design $S$, then it has property $\alpha$ if and only if:
-
-1. $A$ is of resolution $IV$ or higher
-2. $(A, B, B')$ has resolution $III$ or higher, that is, no repeated columns, where $B' = (b'_1, \dots, b'_m)$ with $b'_j = a_jb_j$
+**Example.**
+![w:750](image.png)
 
 ---
 
-## Breaking down
+## For $s=3$
 
-We first focus on the first two conditions of Lemma 1 and Proposition 1 (i):
+We want to find the grouping scheme of $(\alpha, \beta, \alpha\cdot\beta. \alpha\cdot\beta^2)$ for $s^2 \times s^2$ stratification property, which requires the design $A$ has resolution $IV$ and $(A, B, B', B'')$ has resolution $III$.
 
-1. $A$ is of resolution $IV$ $\longleftrightarrow$ $(a_i, a_j, a_u)$ is $\text{OA}(n, 3, s, 3)$
-2. $(a_i, b_i, a_j, b_j)$ being $\text{OA}(n, 4, s, 4)$ $\longrightarrow$ $(a_i, a_j, b_j)$ being $\text{OA}(n, 3, s, 3)$
+The major difference is that each effect in a 3 level design **contains 2 components**.
 
----
-
-## Breaking down
-
-For $s=2$, $(a_i, b_i, a_j, b_j)$ having strength 4
-
-$\longrightarrow$ Four columns are independent, orthogonal
-
-$\longrightarrow$ No defining words among them
-
-$\longrightarrow$ $a_ib_ia_jb_j \neq I$
-
-$\longrightarrow$ $a_ib_i \neq a_jb_j$
-
-$\longrightarrow$ $(A, B, B')$ having no repeated columns can assure this
+Therefore, instead the permutations of _all effects_, we want to find the permutations of _all components_.
 
 ---
 
-## Breaking down
+## For $s=3$
 
-Finally, to choose $c_j:$
-
-$\longrightarrow$ Take $c_j$ to be any column other than $a_j$, $b_j$ and $a_jb_j$
-
-$\longrightarrow$ $(a_j, b_j, c_j)$ is $\text{OA}(n, 3, s, 3)$
-
-$\longrightarrow$ All requirements from Lemma 1 and Proposition 1 (i) are satisified
-
----
-
-## Same idea goes for $s=3$
-
-- $A$ still need to be of resolution $IV$ or higher for $(a_i, a_j, a_u)$ being $\text{OA}(n, 3, s, 3)$
-- $(a_i, b_i, a_j, b_j)$ is strength 4 $\longrightarrow I \neq a_ib_ia_jb_j$ and $a_ib_ia_jb_j^2$
-- It means $a_ib_i \neq a_jb_j$ and $a_ib_i \neq a_jb_j^2$
-- $(A, B, B', B'')$ having no repeated columns can assure this, where $b_j' = a_jb_j$ and $b_j'' = a_jb_j^2$
+| $\alpha$ | $\beta$  | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
+| :------: | :------: | :----------------: | :------------------: |
+|   $1$    |   $2$    |        $12$        |        $12^2$        |
+|  $1^2$   |  $2^2$   |      $1^22^2$      |        $1^2$         |
+|   $2$    |  $1^2$   |       $1^22$       |         $12$         |
+|  $2^2$   |   $1$    |       $12^2$       |       $1^22^2$       |
+|   $12$   |  $12^2$  |       $1^2$        |        $2^2$         |
+| $1^22^2$ |  $1^22$  |        $1$         |         $2$          |
+|  $12^2$  | $1^22^2$ |        $2$         |        $1^2$         |
+|  $1^22$  |   $12$   |       $2^2$        |         $1$          |
 
 ---
 
-## To sum up
+## For $s=3$
 
-If an $\text{SOA}(n, m, s^3, 3)$ for $s=3$ is to be constructed using regular $A$, $B$, and $C$ with their columns selected from a saturated design $S$, then it has property $\alpha$ if and only if:
+| $\alpha$  |  $\beta$  | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
+| :-------: | :-------: | :----------------: | :------------------: |
+|   $13$    |   $24$    |       $1234$       |      $12^234^2$      |
+|  $1^23$   |  $2^24$   |     $1^22^234$     |      $1^234^2$       |
+|   $23$    |  $1^24$   |      $1^2234$      |       $1234^2$       |
+|  $2^23$   |   $14$    |      $12^234$      |     $1^22^234^2$     |
+|   $123$   |  $12^24$  |      $1^234$       |      $2^234^2$       |
+| $1^22^23$ |  $1^224$  |       $134$        |       $234^2$        |
+|  $12^23$  | $1^22^24$ |       $234$        |      $1^234^2$       |
+|  $1^223$  |   $124$   |      $2^234$       |       $134^2$        |
 
-1. $A$ is of resolution $IV$ or higher
-2. $(A, B, B', B'')$ has resolution $III$ or higher where $B' = (b'_1, \dots, b'_m)$ with $b'_j = a_jb_j$, and $B'' = (b''_1, \dots, b''_m)$ with $b''_j = a_jb_j^2$.
+---
+
+## For $s=3$
+
+... adding up another group $(1, 2, 12, 12^2)$, this gives us the grouping scheme $(A, B, B', B'')$ we desired.
+
+Note that $(3, 4, 34, 34^2)$ cannot be included, otherwise it will not properly form a design A of resolution $IV$.
+
+_Side note: res. IV = cannot form I with any 3 elements._
+
+---
+
+## Next ...
+
+1. Generate $D = 9A+3B+C.$
+2. Check if $D$ is $\text{SOA}$ of strength 3.
+3. Check if $D$ has $\alpha$ property.
+4. Find the permutations for $k=3$.
