@@ -26,7 +26,11 @@ class FullFactorial:
         return self._effects[idx]
 
     def __str__(self) -> str:
-        return pprint.pformat(self._effects)
+        return (
+            f"Full factorial of k={self.k}\n"
+            f"number of effects: {len(self._effects)}\n"
+            f"effects:\n{pprint.pformat(self._effects)}"
+        )
 
     def _effects_generator(self) -> list[tuple]:
 

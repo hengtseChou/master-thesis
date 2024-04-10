@@ -17,3 +17,17 @@ def interaction_component(a: tuple, b: tuple, power_of_b: int = 1):
     np_b = np.array(b)
     add_up = np_a + np_b * power_of_b
     return offseting_effect(tuple(add_up))
+
+
+def addup(a: tuple, b: tuple) -> tuple:
+    a = np.array(a)
+    b = np.array(b)
+    return tuple(a+b)
+
+def mod_3(a: tuple) -> tuple:
+    a = np.array(a)
+    return tuple(a % 3)
+
+def power(a: tuple, power: int) -> tuple:
+    a = np.array(a)
+    return tuple(a * power)
