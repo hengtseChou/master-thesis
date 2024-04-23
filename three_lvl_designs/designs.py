@@ -13,13 +13,14 @@ def _sort_effect(t):
 
 class FullFactorial:
 
-    def __init__(self, k: int) -> None:
+    def __init__(self, k: int, offset: bool = True) -> None:
         try:
             self.k = int(k)
         except ValueError:
             raise ValueError("k must be an integer.")
         if self.k < 2:
             raise ValueError("k must be greater than or equal to 2.")
+        self._offset = offset
         self._effects = self._effects_generator()
 
     def __getitem__(self, idx) -> list[tuple]:
@@ -35,7 +36,8 @@ class FullFactorial:
     def _effects_generator(self) -> list[tuple]:
 
         effects = list(itertools.product(range(3), repeat=self.k))
-        effects = [offseting_effect(effect) for effect in effects]
+        if self._offset is True:
+            effects = [offseting_effect(effect) for effect in effects]
         effects = [effect for effect in set(effects)]
         effects.remove(tuple(0 for _ in range(self.k)))
         effects = sorted(effects, key=_sort_effect)
@@ -60,5 +62,10 @@ class FullFactorial:
         return [eff for eff in self._effects if eff.count(0) == self.k - num_of_factors]
 
 
-def full_factorial(k: int) -> FullFactorial:
-    return FullFactorial(k=k)
+def full_factorial(k: int, offset: bool = True) -> FullFactorial:
+    return FullFactorial(k=k, offset=offset)
+
+
+def full_factorial_effects(k: int, offset: bool = True):
+    ff = full_factorial(k, offset)
+    return ff.effects
