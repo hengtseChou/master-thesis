@@ -1,5 +1,7 @@
 paper/
 __pycache__/
+.githooks/node_modules/
+.githooks/package-lock.json
 slides/**
 !slides/slides.md
 !slides/slides.pdf
