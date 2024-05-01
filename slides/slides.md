@@ -61,13 +61,29 @@ Date: May 1, 2024
 
 ## Extendable grouping for $s=2$
 
+From Shi and Tang, 2020.
+
+![w:900](construction.png)
+
+---
+
+## Extendable grouping for $s=2$
+
+![w:900](thm.png)
+
+---
+
+## Extendable grouping for $s=2$
+
+![w:900](maximum_num_of_factors.png)
+
 ---
 
 ## $k=4 \rightarrow k=6$
 
 Assume we have $A_k$, $B_k$, $B_k'$, $B_k''$.
 
-![alt text](equation1.png)
+![equation](equation1.png)
 
 <!--
 $$
