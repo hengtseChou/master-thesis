@@ -175,6 +175,7 @@ B <- cbind(
 )
 B <- B %% 3
 
+# c_j can by any column other than a_j, b_j, a_j b_j, a_j b_j^2
 C <- cbind(
   e3,
   e3,
@@ -197,9 +198,57 @@ has_property(D, 3, s11)
 has_property(D, 3, s111)
 
 # 2. check if m>8 can be found
+A <- cbind(
+  (e1 + e4), 
+  (e1 * 2 + e4), 
+  
+  (e2 + e4), 
+  (e2 * 2 + e4),
 
+  (e1 + e2 +  e3), 
+  (e1 * 2 + e2 * 2 + e3), 
+  
+  (e1 + e2 * 2 + e3), 
+  (e1 * 2 + e2 + e3)
+)
+A <- A %% 3
 
+B <- cbind(
+  (e2 + e3), 
+  (e2 * 2 + e3), 
+  
+  (e1 * 2 + e3), 
+  (e1 + e3), 
 
+  (e1 + e2 *  2 + e4), 
+  (e1 * 2 + e2 + e4), 
+  
+  (e1 * 2 + e2 * 2 + e4), 
+  (e1 + e2 + e4)
+)
+B <- B %% 3
+
+# c_j can by any column other than a_j, b_j, a_j b_j, a_j b_j^2
+C <- cbind(
+  e3,
+  e3,
+  e3, 
+  e3, 
+  e3, 
+  e3, 
+  e3, 
+  e3
+)
+C <- C %% 3
+
+# D: SOA(n=81, m=9, s=3^3, t=3)
+D <- 9 * A + 3 * B + C
+D <- floor(D/3)
+
+has_property(D, 3, s22)
+has_property(D, 3, s21)
+has_property(D, 3, s11)
+has_property(D, 3, s111)
 
 
 
