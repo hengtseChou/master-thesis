@@ -195,7 +195,7 @@ e2 <- rep(0:2, each = 81, times = 3)
 e3 <- rep(0:2, each = 27, times = 9)
 e4 <- rep(0:2, each = 9, times = 27)
 e5 <- rep(0:2, each = 3, times = 81)
-e6 <- rep(0:2, each = 1, timse = 243)
+e6 <- rep(0:2, each = 1, times = 243)
 
 A <- cbind(
   (e1 + e4),
@@ -366,7 +366,7 @@ B <- cbind(
 B <- B %% 3
 
 # c_j can by any column other than a_j, b_j, a_j b_j, a_j b_j^2
-C <- matrix(e3, length(e3), ncol(A))
+C <- matrix(e5, length(e5), ncol(A))
 C <- C %% 3
 
 # D = s^2 * A + s * B + C
@@ -379,4 +379,4 @@ has_property(D, 3, s11) # true
 has_property(D, 3, s111) # false
 
 find_bad_combination(D, 3, s22)
-find_bad_combination(D, 3, s111)
+  find_bad_combination(D, 3, s111)
