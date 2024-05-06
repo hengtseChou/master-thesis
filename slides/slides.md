@@ -164,6 +164,15 @@ Instead of multiply by $(3, 4)$, we multiply it by $(3, 34)$.
 
 ---
 
+## After meeting
+
+1. Hold the validation of $m>8$ and the grouping for $k=3$.
+2. Some issues with `strength.py` since the $A$ with $m=8$ does not have enough degrees of freedom to have strength 5.
+3. Look into property $\beta$. It should be quick because it resembles the construction of property $\alpha$.
+4. If there is still time, look into property $\gamma$.
+
+---
+
 <!-- _hide: true -->
 
 ## Notes
