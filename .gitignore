@@ -4,3 +4,4 @@ slides/**
 !slides/slides.md
 !slides/slides.pdf
 !slides/*.png
+.Rproj.user
