@@ -42,40 +42,28 @@ math: mathjax
 
 # Weekly Meeting
 
-Topic: Issues regarding grouping and permutations
+Topic: validate $k=6$; find property $(\beta)$ and $(\gamma)$
 
 <br>
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: May 1, 2024
+Date: May 8, 2024
 
 ---
 
-## Issues
+## A grouping for $k=4$
 
-1. Check if $m>8$ is possible, by trying different mutiplication to the permutation.
-2. Dig into the grouping algorithm when $s=2$, and think about if it can be extended to $s=3$.
-
----
-
-## Extendable grouping for $s=2$
-
-From Shi and Tang, 2020.
-
-![w:900](construction.png)
-
----
-
-## Extendable grouping for $s=2$
-
-![w:900](thm.png)
-
----
-
-## Extendable grouping for $s=2$
-
-![w:900](maximum_num_of_factors.png)
+| $\alpha$  |  $\beta$  | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
+| :-------: | :-------: | :----------------: | :------------------: |
+|   $14$    |   $23$    |       $1234$       |      $12^234^2$      |
+|  $1^24$   |  $2^23$   |     $1^22^234$     |      $1^2234^2$      |
+|   $24$    |  $1^23$   |      $1^2234$      |       $1234^2$       |
+|  $2^24$   |   $13$    |      $12^234$      |     $1^22^234^2$     |
+|   $123$   |  $12^24$  |      $1^234$       |      $2^234^2$       |
+| $1^22^23$ |  $1^224$  |       $134$        |       $234^2$        |
+|  $12^23$  | $1^22^24$ |       $234$        |      $1^234^2$       |
+|  $1^223$  |   $124$   |      $2^234$       |       $134^2$        |
 
 ---
 
@@ -105,97 +93,53 @@ $$
 
 ---
 
-## $k=4 \rightarrow k=6$
+## Property $(\beta)$ for $s=2$
 
-- Now we have $m=8$ for $k=4, s=3$.
-- 32 effects in total (full factorial: 40 effects).
-- By the proposed method, we have $m=8\times9=72$ $k=6, s=3$.
-- 288 effects in total (full factorial: 364 effects).
+$(\beta)$: stratifications on $s^2\times s \times s$, $s\times s^2 \times s$ and $s \times s \times s^2$ grids.
 
----
+Thm: $D$ has property $\beta$ iff
 
-## A grouping for $k=4$
-
-| $\alpha$  |  $\beta$  | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
-| :-------: | :-------: | :----------------: | :------------------: |
-|   $14$    |   $23$    |       $1234$       |      $12^234^2$      |
-|  $1^24$   |  $2^23$   |     $1^22^234$     |      $1^2234^2$      |
-|   $24$    |  $1^23$   |      $1^2234$      |       $1234^2$       |
-|  $2^24$   |   $13$    |      $12^234$      |     $1^22^234^2$     |
-|   $123$   |  $12^24$  |      $1^234$       |      $2^234^2$       |
-| $1^22^23$ |  $1^224$  |       $134$        |       $234^2$        |
-|  $12^23$  | $1^22^24$ |       $234$        |      $1^234^2$       |
-|  $1^223$  |   $124$   |      $2^234$       |       $134^2$        |
+1. $A$ is of resolution $IV$ or higher.
+2. $(B, B') \subseteq \bar{A}$.
+3. $(B, B')$ does not contain any interaction column involving two factors from $A$.
 
 ---
 
-## Why $34$ cannot be put in $\alpha$ or $\beta$
+## Property $(\beta)$ for $s=2$
 
-Take the first row for example.
+The thm is based on $(a_i, a_j, a_u, b_u)$ being $\text{OA}(n, 4, s, 4)$.
 
-Instead of multiply by $(3, 4)$, we multiply it by $(3, 34)$.
-
-| $\alpha$ | $\beta$ | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
-| :------: | :-----: | :----------------: | :------------------: |
-|   $3$    |  $34$   |       $3^24$       |        $4^2$         |
-
----
-
-## Why $34$ cannot be put in $\alpha$ or $\beta$
-
-| $\alpha$  |  $\beta$  | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
-| :-------: | :-------: | :----------------: | :------------------: |
-|   $13$    |   $234$   |      $123^24$      |      $12^24^2$       |
-|  $1^24$   |  $2^23$   |     $1^22^234$     |      $1^2234^2$      |
-|   $24$    |  $1^23$   |      $1^2234$      |       $1234^2$       |
-|  $2^24$   |   $13$    |      $12^234$      |     $1^22^234^2$     |
-|   $123$   |  $12^24$  |      $1^234$       |      $2^234^2$       |
-| $1^22^23$ |  $1^224$  |       $134$        |       $234^2$        |
-|  $12^23$  | $1^22^24$ |       $234$        |      $1^234^2$       |
-|  $1^223$  |   $124$   |      $2^234$       |       $134^2$        |
+1. $(a_i, a_j, a_u)$ do not form a word of length 3: $A$ is resolution $IV$.
+2. $(a_i, a_j, b_u)$ do not form a word of length 3: $B$ does not contain any 2fi from $A$.
+3. $(a_i, a_u, b_u)$ do not form a word of length 3: $(B, B') \subseteq \bar{A} = S \setminus A$.
+4. $(a_i, a_j, a_u, b_u)$ do not form a word of length 3: $B'$ does not contain any 2fi from $A$.
 
 ---
 
-## Why $34$ cannot be put in $\alpha$ or $\beta$
+## Construction of $(\beta)$ for $s=2$
 
-- (1, 2) and (7, 3) are duplicated.
+Let $P_0$ consists of $e_3, \dots, e_k$ and all their interactions.
 
-- (1, 3) and (4, 4) are duplicated.
+Let $P = (I, P_0)$.
 
----
-
-## After meeting
-
-1. Hold the validation of $m>8$ and the grouping for $k=3$.
-2. Some issues with `strength.py` since the $A$ with $m=8$ does not have enough degrees of freedom to have strength 5.
-3. Look into property $\beta$. It should be quick because it resembles the construction of property $\alpha$.
-4. If there is still time, look into property $\gamma$.
+Then, we have $S = (P_0, e_1P, e_2P, e_1e_2P) \rightarrow A = e_1P$ and $B = e_2P.$
 
 ---
 
-<!-- _hide: true -->
+## For $s=3$
 
-## Notes
+Let $P_0$ consists of $e_3, \dots, e_k$ and all their interactions.
 
-_Hidden page_
+Let $P = (I, P_0)$.
 
-**The number of effects:**
+Then, we have
 
-- $k=2$: 4
-- $k=3$: 13 (=4x3+1)
-- $k=4$: 40 (=13x3+1)
-- $k=5$: 121
-- $k=6$: 364
+$S = (P, e_1P, e_1^2P, e_2P, e_2^2P, e_1e_2P, e_1^2e_2^2P, e_1e_2^2P, e_1^2e_2P)$
 
 ---
 
-<!-- _hide: true -->
+## After Meeting
 
-## Notes
-
-_Hidden page_
-
-**Formula:**
-
-1. $\sum_{i=1}^kC_i^k2^{i-1}$
-2. $\frac{3^k-1}{2}$
+1. The grouping for $(\alpha)$ should use the correct permutation.
+2. Now `s22` passed but `s111` still need to figure out.
+3. $(\beta)$ looks promising. Try verify it.
