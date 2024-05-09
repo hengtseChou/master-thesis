@@ -1,147 +1,7 @@
-### stratification functions
-
-n_dis <- function(x) {
-  # number of distinct elements
-  length(unique(x))
-}
-
-# note that d can only take design with s^(even number)
-# if s^(even number), d <- floor(d/3)
-
-s211 <- function(d, s) {
-  A <- combn(ncol(d), 3)
-  check <- matrix(0, 3, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- d[, A[, i]]
-    d1 <- cbind(floor(dp[, 1]), floor(dp[, 2]/s), floor(dp[, 3]/s))
-    d2 <- cbind(floor(dp[, 2]), floor(dp[, 1]/s), floor(dp[, 3]/s))
-    d3 <- cbind(floor(dp[, 3]), floor(dp[, 2]/s), floor(dp[, 1]/s))
-    if (n_dis(d1 %*% c(s^2, s, 1)) == s^4) {
-      check[1, i] <- 1
-    }
-    if (n_dis(d2 %*% c(s^2, s, 1)) == s^4) {
-      check[2, i] <- 1
-    }
-    if (n_dis(d3 %*% c(s^2, s, 1)) == s^4) {
-      check[3, i] <- 1
-    }
-  }
-  return(check)
-}
-
-s221 <- function(d, s) {
-  A <- combn(ncol(d), 3)
-  check <- matrix(0, 3, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- d[, A[, i]]
-    d1 <- cbind(floor(dp[, 1]/s), floor(dp[, 2]), floor(dp[, 3]))
-    d2 <- cbind(floor(dp[, 2]/s), floor(dp[, 1]), floor(dp[, 3]))
-    d3 <- cbind(floor(dp[, 3]/s), floor(dp[, 2]), floor(dp[, 1]))
-    if (n_dis(d1 %*% c(s^4, s^2, 1)) == s^5) {
-      check[1, i] <- 1
-    }
-    if (n_dis(d2 %*% c(s^4, s^2, 1)) == s^5) {
-      check[2, i] <- 1
-    }
-    if (n_dis(d3 %*% c(s^4, s^2, 1)) == s^5) {
-      check[3, i] <- 1
-    }
-  }
-  return(check)
-}
-
-s111 <- function(d, s) {
-  A <- combn(ncol(d), 3)
-  check <- rep(0, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- d[, A[, i]]
-    if (n_dis(floor(dp/s) %*% s^(0:2)) == s^3)
-      check[i] <- 1
-  }
-  return(check)
-}
-
-s222 <- function(d, s) {
-  A <- combn(ncol(d), 3)
-  check <- rep(0, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- d[, A[, i]]
-    if (n_dis(dp %*% (s^2)^(0:2)) == s^6)
-      check[i] <- 1
-  }
-  return(check)
-}
-
-s1111 <- function(d, s) {
-  A <- combn(ncol(d), 4)
-  check <- rep(0, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- d[, A[, i]]
-    if (n_dis(floor(dp/s) %*% s^(0:3)) == s^4)
-      check[i] <- 1
-  }
-  return(check)
-}
-
-s22 <- function(d, s) {
-  A <- combn(ncol(d), 2)
-  check <- rep(0, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- d[, A[, i]]
-    if (n_dis(dp %*% (s^2)^(0:1)) == s^4)
-      check[i] <- 1
-  }
-  return(check)
-}
-
-s21 <- function(d, s) {
-  A <- combn(ncol(d), 2)
-  check <- matrix(0, 2, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- d[, A[, i]]
-    d1 <- cbind(floor(dp[, 1]/s), dp[, 2])
-    d2 <- cbind(floor(dp[, 2]/s), dp[, 1])
-    if (n_dis(d1 %*% c(s^2, 1)) == s^3)
-      check[1, i] <- 1
-    if (n_dis(d2 %*% c(s^2, 1)) == s^3)
-      check[2, i] <- 1
-  }
-  return(check)
-}
-
-s11 <- function(d, s) {
-  A <- combn(ncol(d), 2)
-  check <- rep(0, ncol(A))
-  for (i in 1:ncol(A)) {
-    dp <- floor(d[, A[, i]]/s)
-    if (n_dis(dp %*% c(s, 1)) == s^2)
-      check[i] <- 1
-  }
-  return(check)
-}
-
-### diagnosis functions
-
-has_property <- function(d, s, fn){
-  result <- fn(d, s)
-  if (length(result) == sum(result)) {
-    return(T)
-  } else {
-    return(F)
-  }
-}
-
-find_bad_combination <- function(d, s, fn) {
-  all_idx <- 1:length(fn(d, s))
-  comb <- combn(ncol(d), 3)
-  idx <- all_idx[fn(d, s) == 0]
-  if (length(comb[, idx]) != 0) {
-    return(comb[, idx])
-  } else {
-    message("no bad combination found.")
-  }
-}
-
+# library(devtools)
+# install_github("hank-chouu/stRatification")
+library(stRatification)
+# remove.packages("stRatification")
 ### experiment
 
 # 1. a working design for m=8
@@ -197,7 +57,7 @@ e4 <- rep(0:2, each = 9, times = 27)
 e5 <- rep(0:2, each = 3, times = 81)
 e6 <- rep(0:2, each = 1, times = 243)
 
-A <- cbind(
+base_A <- cbind(
   (e1 + e4),
   (e1 * 2 + e4),
   (e2 + e4),
@@ -205,83 +65,9 @@ A <- cbind(
   (e1 + e2 + e3),
   (e1 * 2 + e2 * 2 + e3),
   (e1 + e2 * 2 + e3),
-  (e1 * 2 + e2 + e3),
-
-  (e1 + e4 + e5),
-  (e1 * 2 + e4 + e5),
-  (e2 + e4 + e5),
-  (e2 * 2 + e4 + e5),
-  (e1 + e2 + e3 + e5),
-  (e1 * 2 + e2 * 2 + e3 + e5),
-  (e1 + e2 * 2 + e3 + e5),
-  (e1 * 2 + e2 + e3 + e5),
-
-  (e1 + e4 + e5 * 2),
-  (e1 * 2 + e4 + e5 * 2),
-  (e2 + e4 + e5 * 2),
-  (e2 * 2 + e4 + e5 * 2),
-  (e1 + e2 + e3 + e5 * 2),
-  (e1 * 2 + e2 * 2 + e3 + e5 * 2),
-  (e1 + e2 * 2 + e3 + e5 * 2),
-  (e1 * 2 + e2 + e3 + e5 * 2),
-
-  (e1 + e4 + e6),
-  (e1 * 2 + e4 + e6),
-  (e2 + e4 + e6),
-  (e2 * 2 + e4 + e6),
-  (e1 + e2 + e3 + e6),
-  (e1 * 2 + e2 * 2 + e3 + e6),
-  (e1 + e2 * 2 + e3 + e6),
-  (e1 * 2 + e2 + e3 + e6),
-
-  (e1 + e4 + e6 * 2),
-  (e1 * 2 + e4 + e6 * 2),
-  (e2 + e4 + e6 * 2),
-  (e2 * 2 + e4 + e6 * 2),
-  (e1 + e2 + e3 + e6 * 2),
-  (e1 * 2 + e2 * 2 + e3 + e6 * 2),
-  (e1 + e2 * 2 + e3 + e6 * 2),
-  (e1 * 2 + e2 + e3 + e6 * 2),
-
-  (e1 + e4 + e5 + e6),
-  (e1 * 2 + e4 + e5 + e6),
-  (e2 + e4 + e5 + e6),
-  (e2 * 2 + e4 + e5 + e6),
-  (e1 + e2 + e3 + e5 + e6),
-  (e1 * 2 + e2 * 2 + e3 + e5 + e6),
-  (e1 + e2 * 2 + e3 + e5 + e6),
-  (e1 * 2 + e2 + e3 + e5 + e6),
-
-  (e1 + e4 + e5 * 2 + e6 * 2),
-  (e1 * 2 + e4 + e5 * 2 + e6 * 2),
-  (e2 + e4 + e5 * 2 + e6 * 2),
-  (e2 * 2 + e4 + e5 * 2 + e6 * 2),
-  (e1 + e2 + e3 + e5 * 2 + e6 * 2),
-  (e1 * 2 + e2 * 2 + e3 + e5 * 2 + e6 * 2),
-  (e1 + e2 * 2 + e3 + e5 * 2 + e6 * 2),
-  (e1 * 2 + e2 + e3 + e5 * 2 + e6 * 2),
-
-  (e1 + e4 + e5 + e6 * 2),
-  (e1 * 2 + e4 + e5 + e6 * 2),
-  (e2 + e4 + e5 + e6 * 2),
-  (e2 * 2 + e4 + e5 + e6 * 2),
-  (e1 + e2 + e3 + e5 + e6 * 2),
-  (e1 * 2 + e2 * 2 + e3 + e5 + e6 * 2),
-  (e1 + e2 * 2 + e3 + e5 + e6 * 2),
-  (e1 * 2 + e2 + e3 + e5 + e6 * 2),
-
-  (e1 + e4 + e5 * 2 + e6),
-  (e1 * 2 + e4 + e5 * 2 + e6),
-  (e2 + e4 + e5 * 2 + e6),
-  (e2 * 2 + e4 + e5 * 2 + e6),
-  (e1 + e2 + e3 + e5 * 2 + e6),
-  (e1 * 2 + e2 * 2 + e3 + e5 * 2 + e6),
-  (e1 + e2 * 2 + e3 + e5 * 2 + e6),
-  (e1 * 2 + e2 + e3 + e5 * 2 + e6)
+  (e1 * 2 + e2 + e3)
 )
-A <- A %% 3
-
-B <- cbind(
+base_B <- cbind(
   (e2 + e3),
   (e2 * 2 + e3),
   (e1 * 2 + e3),
@@ -289,79 +75,32 @@ B <- cbind(
   (e1 + e2 * 2 + e4),
   (e1 * 2 + e2 + e4),
   (e1 * 2 + e2 * 2 + e4),
-  (e1 + e2 + e4),
+  (e1 + e2 + e4)
+)
 
-  (e2 + e3 + e6),
-  (e2 * 2 + e3 + e6),
-  (e1 * 2 + e3 + e6),
-  (e1 + e3 + e6),
-  (e1 + e2 * 2 + e4 + e6),
-  (e1 * 2 + e2 + e4 + e6),
-  (e1 * 2 + e2 * 2 + e4 + e6),
-  (e1 + e2 + e4 + e6),
+A <- cbind(
+  base_A,
+  base_A + (e5),
+  base_A + (e5 * 2),
+  base_A + (e6),
+  base_A + (e6 * 2),
+  base_A + (e5 + e6),
+  base_A + (e5 * 2 + e6 * 2),
+  base_A + (e5 + e6 * 2),
+  base_A + (e5 * 2 + e6)
+)
+A <- A %% 3
 
-  (e2 + e3 + e6 * 2),
-  (e2 * 2 + e3 + e6 * 2),
-  (e1 * 2 + e3 + e6 * 2),
-  (e1 + e3 + e6 * 2),
-  (e1 + e2 * 2 + e4 + e6 * 2),
-  (e1 * 2 + e2 + e4 + e6 * 2),
-  (e1 * 2 + e2 * 2 + e4 + e6 * 2),
-  (e1 + e2 + e4 + e6 * 2),
-
-  (e2 + e3 + e5 + e6),
-  (e2 * 2 + e3 + e5 + e6),
-  (e1 * 2 + e3 + e5 + e6),
-  (e1 + e3 + e5 + e6),
-  (e1 + e2 * 2 + e4 + e5 + e6),
-  (e1 * 2 + e2 + e4 + e5 + e6),
-  (e1 * 2 + e2 * 2 + e4 + e5 + e6),
-  (e1 + e2 + e4 + e5 + e6),
-
-  (e2 + e3 + e5 * 2 + e6 * 2),
-  (e2 * 2 + e3 + e5 * 2 + e6 * 2),
-  (e1 * 2 + e3 + e5 * 2 + e6 * 2),
-  (e1 + e3 + e5 * 2 + e6 * 2),
-  (e1 + e2 * 2 + e4 + e5 * 2 + e6 * 2),
-  (e1 * 2 + e2 + e4 + e5 * 2 + e6 * 2),
-  (e1 * 2 + e2 * 2 + e4 + e5 * 2 + e6 * 2),
-  (e1 + e2 + e4 + e5 * 2 + e6 * 2),
-
-  (e2 + e3 + e5 + e6 * 2),
-  (e2 * 2 + e3 + e5 + e6 * 2),
-  (e1 * 2 + e3 + e5 + e6 * 2),
-  (e1 + e3 + e5 + e6 * 2),
-  (e1 + e2 * 2 + e4 + e5 + e6 * 2),
-  (e1 * 2 + e2 + e4 + e5 + e6 * 2),
-  (e1 * 2 + e2 * 2 + e4 + e5 + e6 * 2),
-  (e1 + e2 + e4 + e5 + e6 * 2),
-
-  (e2 + e3 + e5 * 2 + e6),
-  (e2 * 2 + e3 + e5 * 2 + e6),
-  (e1 * 2 + e3 + e5 * 2 + e6),
-  (e1 + e3 + e5 * 2 + e6),
-  (e1 + e2 * 2 + e4 + e5 * 2 + e6),
-  (e1 * 2 + e2 + e4 + e5 * 2 + e6),
-  (e1 * 2 + e2 * 2 + e4 + e5 * 2 + e6),
-  (e1 + e2 + e4 + e5 * 2 + e6),
-
-  (e2 + e3 + e5),
-  (e2 * 2 + e3 + e5),
-  (e1 * 2 + e3 + e5),
-  (e1 + e3 + e5),
-  (e1 + e2 * 2 + e4 + e5),
-  (e1 * 2 + e2 + e4 + e5),
-  (e1 * 2 + e2 * 2 + e4 + e5),
-  (e1 + e2 + e4 + e5),
-
-  (e2 + e3 + e5 * 2),
-  (e2 * 2 + e3 + e5 * 2),
-  (e1 * 2 + e3 + e5 * 2),
-  (e1 + e3 + e5 * 2),
-  (e1 + e2 * 2 + e4 + e5 * 2),
-  (e1 * 2 + e2 + e4 + e5 * 2),
-  (e1 * 2 + e2 * 2 + e4 + e5 * 2),
-  (e1 + e2 + e4 + e5 * 2)
+B <- cbind(
+  base_B,
+  base_B + (e6),
+  base_B + (e6 * 2),
+  base_B + (e5 * 2),
+  base_B + (e5),
+  base_B + (e5 + e6 * 2),
+  base_B + (e5 * 2 + e6),
+  base_B + (e5 * 2 + e6 * 2),
+  base_B + (e5 + e6)
 )
 B <- B %% 3
 
@@ -370,13 +109,14 @@ C <- matrix(e5, length(e5), ncol(A))
 C <- C %% 3
 
 # D = s^2 * A + s * B + C
-D <- 9 * A + 3 * B + C
+# it does not matter if C is added or not
+D <- 9 * A + 3 * B
 D <- floor(D / 3)
 
-has_property(D, 3, s22) # false
+has_property(D, 3, s22) # true
 has_property(D, 3, s21) # true
 has_property(D, 3, s11) # true
 has_property(D, 3, s111) # false
 
 find_bad_combination(D, 3, s22)
-  find_bad_combination(D, 3, s111)
+find_bad_combination(D, 3, s111)
