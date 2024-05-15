@@ -48,7 +48,7 @@ Topic: find property $(\beta)$
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: May 15, 2024
+Date: May 22, 2024
 
 ---
 
