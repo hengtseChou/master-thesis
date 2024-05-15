@@ -14,7 +14,7 @@ SOAs of strength three are most useful, since SOAs of strength two are no more s
 
 > An $\text{SOA}(n,m,s^3,3)$, say $D$, exists if and only if there exist three arrays $A = (a_1,...,a_m)$, $B = (b_1,...,b_m)$, and $C = (c_1,...,c_m)$ such that $(a_i ,a_j ,a_u)$, $(a_i,a_j ,b_j )$, and $(a_i,b_i,c_i)$ are $\text{OA}(n, 3,s,3)$ s for all $i \neq j$, $i \neq u$, and $j \neq u$. These arrays are related through $D = s^2A + sB + C$.
 
-An $\text{SOA}(n, m, s^3, 3)$ can achieve stratification on $s\times s \times s$ in all 3-dims, $s \times s^2$ and $\s^2 \times s$ in all 2-dims.
+An $\text{SOA}(n, m, s^3, 3)$ can achieve stratification on $s\times s \times s$ in all 3-dims, $s \times s^2$ and $s^2 \times s$ in all 2-dims.
 
 The goal is to construct certain thrength-three SOAs that enjoy some of the space-filling properties that only strength-four SOAs can offer, which are given by the following notations:
 
@@ -112,9 +112,9 @@ In our work, a revised theorem is proposed:
 
 A construction of the required designs $A$ and $B$ is also given:
 
-$P_0: $e_3, \dots, e_k$ and all of their interactions. $P = (I, P_0)$.
+$P_0$: $e_3, \dots, e_k$ and all of their interactions. $P = (I, P_0)$.
 
-Then, $S = (P_0, e_1 P_0, e_1^2 P_0, e_2 P_0, e_2^2 P_0, e_1 e_2 P_0, e_1^2 e_2^2 P_0, e_1 e_2^2 P_0, e_1^2 e_2 P_0).
+Then, $S = (P_0, e_1 P_0, e_1^2 P_0, e_2 P_0, e_2^2 P_0, e_1 e_2 P_0, e_1^2 e_2^2 P_0, e_1 e_2^2 P_0, e_1^2 e_2 P_0)$.
 
 We can have $A = (e_1 P_0, e_1^2 P_0)$ and $B = (e_2 P_0, e_2^2 P_0)$, so that $B' = (e_1 e_2 P_0, e_1^2 e_2^2 P_0)$ and $B''=(e_1 e_2^2 P_0, e_1^2 e_2 P_0)$.
 
