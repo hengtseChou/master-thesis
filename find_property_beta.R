@@ -39,4 +39,7 @@ has_property(D, 3, s111)
 has_property(D, 3, s21)
 has_property(D, 3, s11)
 
-
+find_bad_combination(D, 3, s211)
+find_bad_combination(D, 3, s111)
+find_bad_combination(D, 3, s21)
+find_bad_combination(D, 3, s11)
