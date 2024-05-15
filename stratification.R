@@ -1,4 +1,3 @@
-
 n_dis <- function(x) {
   length(unique(x))
 }
@@ -56,17 +55,7 @@ s111 <- function(d, s) {
   return(check)
 }
 
-#' Stratification
-#'
-#' Check if the design has s^2 * s^2 * s^2 stratification in all 3-dims.
-#' @param d The design.
-#' @param s The base level of the design.
-#' @return All 1 if the stratification is satisfied
-#' @export
 s222 <- function(d, s) {
-  if (is_even_power(d, s)) {
-    d <- floor(d / s)
-  }
   A <- combn(ncol(d), 3)
   check <- rep(0, ncol(A))
   for (i in 1:ncol(A)) {
@@ -77,17 +66,7 @@ s222 <- function(d, s) {
   return(check)
 }
 
-#' Stratification
-#'
-#' Check if the design has s * s * s * s stratification in all 4-dims.
-#' @param d The design.
-#' @param s The base level of the design.
-#' @return All 1 if the stratification is satisfied
-#' @export
 s1111 <- function(d, s) {
-  if (is_even_power(d, s)) {
-    d <- floor(d / s)
-  }
   A <- combn(ncol(d), 4)
   check <- rep(0, ncol(A))
   for (i in 1:ncol(A)) {
@@ -98,17 +77,7 @@ s1111 <- function(d, s) {
   return(check)
 }
 
-#' Stratification
-#'
-#' Check if the design has s^2 * s^2 stratification in all 2-dims.
-#' @param d The design.
-#' @param s The base level of the design.
-#' @return All 1 if the stratification is satisfied
-#' @export
 s22 <- function(d, s) {
-  if (is_even_power(d, s)) {
-    d <- floor(d / s)
-  }
   A <- combn(ncol(d), 2)
   check <- rep(0, ncol(A))
   for (i in 1:ncol(A)) {
@@ -119,17 +88,7 @@ s22 <- function(d, s) {
   return(check)
 }
 
-#' Stratification
-#'
-#' Check if the design has s^2 * s stratification in all 2-dims.
-#' @param d The design.
-#' @param s The base level of the design.
-#' @return All 1 if the stratification is satisfied
-#' @export
 s21 <- function(d, s) {
-  if (is_even_power(d, s)) {
-    d <- floor(d / s)
-  }
   A <- combn(ncol(d), 2)
   check <- matrix(0, 2, ncol(A))
   for (i in 1:ncol(A)) {
@@ -144,17 +103,7 @@ s21 <- function(d, s) {
   return(check)
 }
 
-#' Stratification
-#'
-#' Check if the design has s * s stratification in all 2-dims.
-#' @param d The design.
-#' @param s The base level of the design.
-#' @return All 1 if the stratification is satisfied
-#' @export
 s11 <- function(d, s) {
-  if (is_even_power(d, s)) {
-    d <- floor(d / s)
-  }
   A <- combn(ncol(d), 2)
   check <- rep(0, ncol(A))
   for (i in 1:ncol(A)) {
@@ -177,31 +126,27 @@ has_property <- function(d, s, fn){
 }
 
 find_bad_combination <- function(d, s, fn) {
-  all_idx <- 1:length(fn(d, s))
-  comb <- combn(ncol(d), 3)
-  idx <- all_idx[fn(d, s) == 0]
-  if (length(comb[, idx]) != 0) {
-    return(comb[, idx])
-  } else {
-    message("no bad combination found.")
-  }
-}
-
-# for s211, s221 and s21
-find_bad_combination2 <- function(d, s, fn) {
   check <- fn(d, s)
-  num_of_factors <- dim(check)[1]
-  if (is.null(num_of_factors)) {num_of_factors <- 1}
-  all_idx <- 1:length(check)
-  comb <- combn(ncol(d), num_of_factors)
-  idx <- all_idx[check == 0]
-  idx <- ceiling(idx / num_of_factors)
-  if (length(idx) != 0) {
-    return(comb[, idx])
-  } else {
-    message("no bad combination found.")
+  if (is.null(dim(check)[1])) {
+    all_idx <- 1:length(check)
+    comb <- combn(ncol(d), 3)
+    idx <- all_idx[check == 0]
+    if (length(comb[, idx]) != 0) {
+      return(comb[, idx])
+    } else {
+      message("no bad combination found.")
+    }
+  } else { # for s211, s221, s21
+    all_idx <- 1:length(check)
+    rows <- dim(check)[1]
+    comb <- combn(ncol(d), rows)
+    idx <- all_idx[check == 0]
+    idx <- ceiling(idx / rows)
+    idx <- unique(idx)
+    if (length(idx) != 0) {
+      return(comb[, idx])
+    } else {
+      message("no bad combination found.")
+    }
   }
 }
-
-
-
