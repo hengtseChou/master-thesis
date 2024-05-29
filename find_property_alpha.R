@@ -63,6 +63,7 @@ base_A <- cbind(
   (e1 + e2 * 2 + e3),
   (e1 * 2 + e2 + e3)
 )
+
 base_B <- cbind(
   (e2 + e3),
   (e2 * 2 + e3),
@@ -75,7 +76,6 @@ base_B <- cbind(
 )
 
 A <- cbind(
-  base_A,
   base_A + (e5),
   base_A + (e5 * 2),
   base_A + (e6),
@@ -88,7 +88,6 @@ A <- cbind(
 A <- A %% 3
 
 B <- cbind(
-  base_B,
   base_B + (e6),
   base_B + (e6 * 2),
   base_B + (e5 * 2),
@@ -101,8 +100,8 @@ B <- cbind(
 B <- B %% 3
 
 # c_j can by any column other than a_j, b_j, a_j b_j, a_j b_j^2
-C <- matrix(e5, length(e5), ncol(A))
-C <- C %% 3
+# C <- matrix(e5, length(e5), ncol(A))
+# C <- C %% 3
 
 # D = s^2 * A + s * B + C
 # it does not matter if C is added or not
