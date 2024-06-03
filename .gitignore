@@ -1,4 +1,4 @@
-paper/
+
 __pycache__/
 slides/**
 !slides/slides.md
