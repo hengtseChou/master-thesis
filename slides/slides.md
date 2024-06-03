@@ -54,8 +54,8 @@ Date: May 29, 2024
 
 ### Issues
 
-1. `s111` stratification for property $\alpha$ with $k=6$
-2. Construct property $\beta$
+1. `s111` stratification for property $\alpha$ with $k=6$.
+2. Construct property $\beta$.
 
 ---
 
@@ -142,12 +142,12 @@ $\rightarrow$ Divide into 2 groups that any 2 columns from group 1 won't form $I
 |  $56^2\cdot ?$  | $5^26^2\cdot ?$ |     $6\cdot ?$     |     $5^2\cdot ?$     |
 |  $5^26\cdot ?$  |   $56\cdot ?$   |    $6^2\cdot ?$    |      $5\cdot ?$      | -->
 
-|                      |               |               |               |                 |               |                 |                 |               |
-| :------------------: | :-----------: | :-----------: | :-----------: | :-------------: | :-----------: | :-------------: | :-------------: | :-----------: |
-|       $\alpha$       |  $5\cdot ?$   | $5^2\cdot ?$  |  $6\cdot ?$   |  $6^2\cdot ?$   |  $56\cdot ?$  | $5^26^2\cdot ?$ |  $56^2\cdot ?$  | $5^26\cdot ?$ |
-|       $\beta$        |  $6\cdot ?$   | $6^2\cdot ?$  | $5^2\cdot ?$  |   $5\cdot ?$    | $56^2\cdot ?$ |  $5^62\cdot ?$  | $5^26^2\cdot ?$ |  $56\cdot ?$  |
-|  $\alpha\cdot\beta$  |  $56\cdot ?$  | $5^26\cdot ?$ | $5^26\cdot ?$ |  $56^2\cdot ?$  | $5^2\cdot ?$  |   $5\cdot ?$    |   $6\cdot ?$    | $6^2\cdot ?$  |
-| $\alpha\cdot\beta^2$ | $56^2\cdot ?$ | $5^26\cdot ?$ |  $56\cdot ?$  | $5^26^2\cdot ?$ | $6^2\cdot ?$  |   $6\cdot ?$    |  $5^2\cdot ?$   |  $5\cdot ?$   |
+|                      |               |                 |               |                 |               |                 |                 |               |
+| :------------------: | :-----------: | :-------------: | :-----------: | :-------------: | :-----------: | :-------------: | :-------------: | :-----------: |
+|       $\alpha$       |  $5\cdot ?$   |  $5^2\cdot ?$   |  $6\cdot ?$   |  $6^2\cdot ?$   |  $56\cdot ?$  | $5^26^2\cdot ?$ |  $56^2\cdot ?$  | $5^26\cdot ?$ |
+|       $\beta$        |  $6\cdot ?$   |  $6^2\cdot ?$   | $5^2\cdot ?$  |   $5\cdot ?$    | $56^2\cdot ?$ |  $5^62\cdot ?$  | $5^26^2\cdot ?$ |  $56\cdot ?$  |
+|  $\alpha\cdot\beta$  |  $56\cdot ?$  | $5^26^2\cdot ?$ | $5^26\cdot ?$ |  $56^2\cdot ?$  | $5^2\cdot ?$  |   $5\cdot ?$    |   $6\cdot ?$    | $6^2\cdot ?$  |
+| $\alpha\cdot\beta^2$ | $56^2\cdot ?$ |  $5^26\cdot ?$  |  $56\cdot ?$  | $5^26^2\cdot ?$ | $6^2\cdot ?$  |   $6\cdot ?$    |  $5^2\cdot ?$   |  $5\cdot ?$   |
 
 Building blocks: $A_4, A_4^*, B_4, B_4^*$
 
@@ -155,3 +155,34 @@ $A_4B_4 = B'$
 $A_4B_4^* = A_4B_4^2 = B''$
 $A_4^*B_4 = A_4^2B_4 = A_4B_4^2 = B''$
 $A_4^*B_4^* = A_4^2B_4^2 = A_4B_4 = B'$
+
+---
+
+### After Meating
+
+|    $\alpha$     |     $\beta$     | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
+| :-------------: | :-------------: | :----------------: | :------------------: |
+|   $5\cdot A$    |   $6\cdot B$    |    $56\cdot AB$    |   $56^2\cdot AB^2$   |
+|  $5\cdot A^2$   |  $6\cdot B^2$   |  $56\cdot A^2B^2$  |   $56^2\cdot A^2B$   |
+|   $5\cdot B$    |  $6\cdot A^2$   |   $56\cdot A^2B$   |    $56^2\cdot AB$    |
+|  $5\cdot B^2$   |   $6\cdot A$    |   $56\cdot AB^2$   |  $56^2\cdot A^2B^2$  |
+|   $6\cdot AB$   |  $5\cdot AB^2$  |   $56\cdot A^2$    |   $5^26\cdot B^2$    |
+| $6\cdot A^2B^2$ |  $5\cdot A^2B$  |    $56\cdot A$     |    $5^26\cdot B$     |
+|  $6\cdot AB^2$  | $5\cdot A^2B^2$ |    $56\cdot B$     |   $5^26\cdot A^2$    |
+|  $6\cdot A^2B$  |   $5\cdot AB$   |   $56\cdot B^2$    |    $5^26\cdot A$     |
+
+---
+
+### After Meeting
+
+- $A$, $A^*$, $B$, $B^*$ idea is essentially re-ordering columns, so not working.
+
+- Permutate by $A$ and $B$ seems good but still not working.
+
+---
+
+### To-do
+
+1. Verify $A$, $B$ permutations (not working).
+2. Use permutation idea to solve $\beta$ property.
+3. Write clearly about $\beta$ property's construction.
