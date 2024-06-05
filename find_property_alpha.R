@@ -75,27 +75,32 @@ base_B <- cbind(
   (e1 + e2 + e4)
 )
 
+A_1 <- base_A[, 1:4]
+A_2 <- base_A[, 5:8]
+B_1 <- base_B[, 1:4]
+B_2 <- base_B[, 5:8]
+
 A <- cbind(
-  e6 + base_A,
-  e6 + base_A * 2,
-  e6 + base_B, 
-  e6 + base_B * 2,
-  e5 + base_A + base_B,
-  e5 + base_A * 2 + base_B * 2,
-  e5 + base_A + base_B * 2,
-  e5 + base_A * 2 + base_B
+  e5 + A_1,
+  e5 * 2 + A_1,
+  e6 + A_1,
+  e6 * 2 + A_1,
+  e5 + e6 + A_2,
+  e5 * 2 + e6 * 2 + A_2,
+  e5 + e6 * 2 + A_2,
+  e5 * 2 + e6 + A_2
 )
 A <- A %% 3
 
 B <- cbind(
-  e5 + base_B,
-  e5 + base_B * 2,
-  e5 + base_A * 2,
-  e5 + base_A,
-  e6 + base_A + base_B *2, 
-  e6 + base_A * 2 + base_B,
-  e6 + base_A * 2 + base_B * 2,
-  e6 + base_A + base_B
+  e6 + B_1,
+  e6 * 2 + B_1,
+  e5 * 2 + B_1,
+  e5 + B_1,
+  e5 + e6 * 2 + B_2,
+  e5 * 2 + e6 + B_2,
+  e5 * 2 + e6 * 2 + B_2,
+  e5 + e6 + B_2
 )
 B <- B %% 3
 
