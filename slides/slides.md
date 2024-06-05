@@ -61,7 +61,7 @@ Date: Jun. 5, 2024
 
 ### Property $\alpha$
 
-$\text{SOA}(n, m, 27, 3)$ has property $\beta$ iff:
+$\text{SOA}(n, m, 27, 3)$ has property $\alpha$ iff:
 
 1. $A$ is resolution $IV$.
 2. $(B, B', B'')$ is resolution $III$, i.e., no repeated columns.
