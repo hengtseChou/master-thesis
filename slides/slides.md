@@ -42,13 +42,13 @@ math: mathjax
 
 # Weekly Meeting
 
-Topic: fix `s111` stratification for property $\alpha$ with $k=6$; find property $\beta$
+Topic: property $\alpha$ with $k=6$; property $\beta$ for $k=4$
 
 <br>
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: May 29, 2024
+Date: Jun. 5, 2024
 
 ---
 
@@ -59,20 +59,18 @@ Date: May 29, 2024
 
 ---
 
-### Breaking down property $\beta$
+### Property $\alpha$
 
-$(a_i, a_j, a_u, b_u)$ being $\text{OA}$ with strength 4 implies
+$\text{SOA}(n, m, 27, 3)$ has property $\beta$ iff:
 
-1. $a_ia_ja_u \neq I \rightarrow A$ is resolution $IV$.
-2. $a_ia_jb_u \neq I \rightarrow B$ contains no 2fi from $A$.
-3. $a_ia_ub_u \neq I \rightarrow (B', B'') \subseteq \bar{A}$
-4. $a_ia_ja_ub_u \neq I \rightarrow$ $B'$ and $B''$ contains no 2fi from A.
+1. $A$ is resolution $IV$.
+2. $(B, B', B'')$ is resolution $III$, i.e., no repeated columns.
 
 ---
 
-### Breaking down property $\beta$
+### Property $\beta$
 
-Therefore, $\text{SOA}(n, m, 27, 3)$ has property $\beta$ iff:
+$\text{SOA}(n, m, 27, 3)$ has property $\beta$ iff:
 
 1. $A$ is resolution $IV$.
 2. $(B, B', B'') \subseteq \bar{A}$.
@@ -80,37 +78,26 @@ Therefore, $\text{SOA}(n, m, 27, 3)$ has property $\beta$ iff:
 
 ---
 
-### Construction for property $\beta$
+### Grouping with $k=6$ from last week
 
-Take $k=4$ for example.
-
-$P_0 = (e_3, e_4, e_3e_4, e_3e_4^2)$
-$P = (I, P_0, P_0^2)$
-
-$A = e_1P$
-$B = e_2P$
-$B' = e_1e_2P$
-$B'' = e_1e_2^2P \rightarrow S=(P_0, A, B, B', B'')$
-
----
-
-### Construction for property $\beta$
-
-This construction passed `s11` and `s21` but not passing `s111` and `s211`.
-
-Reason: Duplicated $P_0$ in $A$.
-
-This is similar to why our construction for property $\alpha$ with $k=6$ is not passign `s111`.
+|    $\alpha$     |     $\beta$     | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
+| :-------------: | :-------------: | :----------------: | :------------------: |
+|   $5\cdot A$    |   $6\cdot B$    |    $56\cdot AB$    |   $56^2\cdot AB^2$   |
+|  $5\cdot A^2$   |  $6\cdot B^2$   |  $56\cdot A^2B^2$  |   $56^2\cdot A^2B$   |
+|   $5\cdot B$    |  $6\cdot A^2$   |   $56\cdot A^2B$   |    $56^2\cdot AB$    |
+|  $5\cdot B^2$   |   $6\cdot A$    |   $56\cdot AB^2$   |  $56^2\cdot A^2B^2$  |
+|   $6\cdot AB$   |  $5\cdot AB^2$  |   $56\cdot A^2$    |   $5^26\cdot B^2$    |
+| $6\cdot A^2B^2$ |  $5\cdot A^2B$  |    $56\cdot A$     |    $5^26\cdot B$     |
+|  $6\cdot AB^2$  | $5\cdot A^2B^2$ |    $56\cdot B$     |   $5^26\cdot A^2$    |
+|  $6\cdot A^2B$  |   $5\cdot AB$   |   $56\cdot B^2$    |    $5^26\cdot A$     |
 
 ---
 
-### Setup for property $\alpha$ with $k=6$
+### Grouping with $k=6$ from last week
 
-$A_6 = (A_4, e_5A_4, e_5^2A_4, e_6A_4, e_6^2A_4, e_5e_6A_4, e_5^2e_6^2A_4, e_5e_6^2A_4, e_5^2e_6A_4)$
+One of the bad combinations: #1, #3, #23.
 
-Possible workaround: similar to how we construct grouping with $k=4$.
-
-$\rightarrow$ Divide into 2 groups that any 2 columns from group 1 won't form $I$ with any 1 column from group 2.
+- #1 = $145$, #3 = $245$, #23 = $1^22^245$.
 
 ---
 
@@ -129,60 +116,50 @@ $\rightarrow$ Divide into 2 groups that any 2 columns from group 1 won't form $I
 
 ---
 
+### Grouping with $k=4$
+
+$A_{(1)} = (14, 1^24, 24, 2^24)$
+
+$A_{(2)} = (123, 1^22^23, 12^23, 1^223)$
+
+$B_{(1)} = (23, 2^23, 1^23, 13)$
+
+$B_{(2)} = (12^24, 1^224, 1^22^24, 124)$
+
+---
+
 ### Grouping with $k=6$
 
-<!-- |    $\alpha$     |     $\beta$     | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
-| :-------------: | :-------------: | :----------------: | :------------------: |
-|   $5\cdot ?$    |   $6\cdot ?$    |    $56\cdot ?$     |    $56^2\cdot ?$     |
-|  $5^2\cdot ?$   |  $6^2\cdot ?$   |  $5^26^2\cdot ?$   |    $5^26\cdot ?$     |
-|   $6\cdot ?$    |  $5^2\cdot ?$   |   $5^26\cdot ?$    |     $56\cdot ?$      |
-|  $6^2\cdot ?$   |   $5\cdot ?$    |   $56^2\cdot ?$    |   $5^26^2\cdot ?$    |
-|   $56\cdot ?$   |  $56^2\cdot ?$  |    $5^2\cdot ?$    |     $6^2\cdot ?$     |
-| $5^26^2\cdot ?$ |  $5^62\cdot ?$  |     $5\cdot ?$     |      $6\cdot ?$      |
-|  $56^2\cdot ?$  | $5^26^2\cdot ?$ |     $6\cdot ?$     |     $5^2\cdot ?$     |
-|  $5^26\cdot ?$  |   $56\cdot ?$   |    $6^2\cdot ?$    |      $5\cdot ?$      | -->
-
-|                      |               |                 |               |                 |               |                 |                 |               |
-| :------------------: | :-----------: | :-------------: | :-----------: | :-------------: | :-----------: | :-------------: | :-------------: | :-----------: |
-|       $\alpha$       |  $5\cdot ?$   |  $5^2\cdot ?$   |  $6\cdot ?$   |  $6^2\cdot ?$   |  $56\cdot ?$  | $5^26^2\cdot ?$ |  $56^2\cdot ?$  | $5^26\cdot ?$ |
-|       $\beta$        |  $6\cdot ?$   |  $6^2\cdot ?$   | $5^2\cdot ?$  |   $5\cdot ?$    | $56^2\cdot ?$ |  $5^62\cdot ?$  | $5^26^2\cdot ?$ |  $56\cdot ?$  |
-|  $\alpha\cdot\beta$  |  $56\cdot ?$  | $5^26^2\cdot ?$ | $5^26\cdot ?$ |  $56^2\cdot ?$  | $5^2\cdot ?$  |   $5\cdot ?$    |   $6\cdot ?$    | $6^2\cdot ?$  |
-| $\alpha\cdot\beta^2$ | $56^2\cdot ?$ |  $5^26\cdot ?$  |  $56\cdot ?$  | $5^26^2\cdot ?$ | $6^2\cdot ?$  |   $6\cdot ?$    |  $5^2\cdot ?$   |  $5\cdot ?$   |
-
-Building blocks: $A_4, A_4^*, B_4, B_4^*$
-
-$A_4B_4 = B'$
-$A_4B_4^* = A_4B_4^2 = B''$
-$A_4^*B_4 = A_4^2B_4 = A_4B_4^2 = B''$
-$A_4^*B_4^* = A_4^2B_4^2 = A_4B_4 = B'$
+|       $\alpha$        |        $\beta$        |      $\alpha\cdot\beta$      |      $\alpha\cdot\beta^2$      |
+| :-------------------: | :-------------------: | :--------------------------: | :----------------------------: |
+|   $5\cdot A_{(1)}$    |   $6\cdot B_{(1)}$    |   $56\cdot A_{(1)}B_{(1)}$   |  $56^2\cdot A_{(1)}B_{(1)}^2$  |
+|  $5^2\cdot A_{(1)}$   |  $6^2\cdot B_{(1)}$   | $5^26^2\cdot A_{(1)}B_{(1)}$ |  $5^26\cdot A_{(1)}B_{(1)}^2$  |
+|   $6\cdot A_{(1)}$    |  $5^2\cdot B_{(1)}$   |  $5^26\cdot A_{(1)}B_{(1)}$  |   $56\cdot A_{(1)}B_{(1)}^2$   |
+|  $6^2\cdot A_{(1)}$   |   $5\cdot B_{(1)}$    |  $56^2\cdot A_{(1)}B_{(1)}$  | $5^26^2\cdot A_{(1)}B_{(1)}^2$ |
+|   $56\cdot A_{(2)}$   |  $56^2\cdot B_{(2)}$  |  $5^2\cdot A_{(2)}B_{(2)}$   |  $6^2\cdot A_{(2)}B_{(2)}^2$   |
+| $5^26^2\cdot A_{(2)}$ |  $5^62\cdot B_{(2)}$  |   $5\cdot A_{(2)}B_{(2)}$    |   $6\cdot A_{(2)}B_{(2)}^2$    |
+|  $56^2\cdot A_{(2)}$  | $5^26^2\cdot B_{(2)}$ |   $6\cdot A_{(2)}B_{(2)}$    |  $5^2\cdot A_{(2)}B_{(2)}^2$   |
+|  $5^26\cdot A_{(2)}$  |   $56\cdot B_{(2)}$   |  $6^2\cdot A_{(2)}B_{(2)}$   |   $5\cdot A_{(2)}B_{(2)}^2$    |
 
 ---
 
-### After Meating
+### Construct property $\beta$ for $s=2$
 
-|    $\alpha$     |     $\beta$     | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
-| :-------------: | :-------------: | :----------------: | :------------------: |
-|   $5\cdot A$    |   $6\cdot B$    |    $56\cdot AB$    |   $56^2\cdot AB^2$   |
-|  $5\cdot A^2$   |  $6\cdot B^2$   |  $56\cdot A^2B^2$  |   $56^2\cdot A^2B$   |
-|   $5\cdot B$    |  $6\cdot A^2$   |   $56\cdot A^2B$   |    $56^2\cdot AB$    |
-|  $5\cdot B^2$   |   $6\cdot A$    |   $56\cdot AB^2$   |  $56^2\cdot A^2B^2$  |
-|   $6\cdot AB$   |  $5\cdot AB^2$  |   $56\cdot A^2$    |   $5^26\cdot B^2$    |
-| $6\cdot A^2B^2$ |  $5\cdot A^2B$  |    $56\cdot A$     |    $5^26\cdot B$     |
-|  $6\cdot AB^2$  | $5\cdot A^2B^2$ |    $56\cdot B$     |   $5^26\cdot A^2$    |
-|  $6\cdot A^2B$  |   $5\cdot AB$   |   $56\cdot B^2$    |    $5^26\cdot A$     |
+$P_0 =$ all combinations of $e_3, \dots, e_k$.
+$P = (I, P_0)$
+
+$A = e_1P$
+$B = e_2P$
+$B' = e_1e_2P \rightarrow S=(P_0, A, B, B')$
 
 ---
 
-### After Meeting
+### Construct property $\beta$ for $s=3$
 
-- $A$, $A^*$, $B$, $B^*$ idea is essentially re-ordering columns, so not working.
+$P_0 =$ all combinations of $e_3, \dots, e_k$.
+$P = (I, P_0, P_0^2)$
 
-- Permutate by $A$ and $B$ seems good but still not working.
-
----
-
-### To-do
-
-1. Verify $A$, $B$ permutations (not working).
-2. Use permutation idea to solve $\beta$ property.
-3. Write clearly about $\beta$ property's construction.
+$A = e_1P$
+$B = e_2P$
+$B' = e_1e_2P$
+$B'' = e_1e_2^2P \rightarrow S=(P_0, A, B, B', B'')$
