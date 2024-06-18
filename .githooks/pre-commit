@@ -5,6 +5,12 @@ cd "$(git rev-parse --show-toplevel)"
 if git diff --cached --name-only | grep -q "slides/slides.md"; then
     prettier slides/slides.md -w
     marp -c .githooks/marp.config.js slides/slides.md -o slides/slides.pdf --allow-local-files
+    archive_for_current_branch="slides/archive/slides-$(git branch --show-current).pdf"
+    if [ -f "$archive_for_current_branch" ]; then
+        echo ":: $archive_for_current_branch exists. Overwriting with updated slides."
+    else
+        echo ":: Making new archive: $archive_for_current_branch"
+    fi
     cp -f slides/slides.pdf "slides/archive/slides-$(git branch --show-current).pdf"
     git add slides/slides.md slides/slides.pdf "slides/archive/slides-$(git branch --show-current).pdf"
 fi
