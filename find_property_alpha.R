@@ -116,7 +116,7 @@ D <- floor(D / 3)
 has_property(D, 3, s22) # true
 has_property(D, 3, s21) # true
 has_property(D, 3, s11) # true
-has_property(D, 3, s111) # false
+has_property(D, 3, s111) # true
 
 find_bad_combination(D, 3, s22)
 find_bad_combination(D, 3, s111)

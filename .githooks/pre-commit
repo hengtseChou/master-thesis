@@ -5,6 +5,7 @@ cd "$(git rev-parse --show-toplevel)"
 if git diff --cached --name-only | grep -q "slides/slides.md"; then
     prettier slides/slides.md -w
     marp -c .githooks/marp.config.js slides/slides.md -o slides/slides.pdf --allow-local-files
+    cp -f slides/slides.pdf "slides/slides-$(git branch --show-current).pdf"
     git add slides/slides.md slides/slides.pdf
 fi
 
