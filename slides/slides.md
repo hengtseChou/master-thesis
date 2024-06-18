@@ -29,11 +29,8 @@ style: |
     padding-top: 60px;
     padding-bottom: 10px;
   }
-  section.cover br {
-    font-size: 60px;
-  }
   section.cover p {
-    line-height: 0.8
+    line-height: 0.8;
   }
 math: mathjax
 ---
@@ -42,20 +39,20 @@ math: mathjax
 
 # Weekly Meeting
 
-Topic: property $\alpha$ with $k=6$; property $\beta$ for $k=4$
+Topic: Need $A$ with resolution $IV$
 
 <br>
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: Jun. 5, 2024
+Date: Jun. 19, 2024
 
 ---
 
 ### Issues
 
-1. `s111` stratification for property $\alpha$ with $k=6$.
-2. Construct property $\beta$.
+1. Property $\alpha$ with design $A$ having resolution $IV$.
+2. Property $\beta$ with design $A$ having resolution $IV$.
 
 ---
 
@@ -74,34 +71,11 @@ $\text{SOA}(n, m, 27, 3)$ has property $\beta$ iff:
 
 1. $A$ is resolution $IV$.
 2. $(B, B', B'') \subseteq \bar{A}$.
-3. $(B, B', B'')$ contains no 2fi from $A$.
+3. $(B, B', B'')$ contains no 2 factor interaction from $A$.
 
 ---
 
-### Grouping with $k=6$ from last week
-
-|    $\alpha$     |     $\beta$     | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
-| :-------------: | :-------------: | :----------------: | :------------------: |
-|   $5\cdot A$    |   $6\cdot B$    |    $56\cdot AB$    |   $56^2\cdot AB^2$   |
-|  $5\cdot A^2$   |  $6\cdot B^2$   |  $56\cdot A^2B^2$  |   $56^2\cdot A^2B$   |
-|   $5\cdot B$    |  $6\cdot A^2$   |   $56\cdot A^2B$   |    $56^2\cdot AB$    |
-|  $5\cdot B^2$   |   $6\cdot A$    |   $56\cdot AB^2$   |  $56^2\cdot A^2B^2$  |
-|   $6\cdot AB$   |  $5\cdot AB^2$  |   $56\cdot A^2$    |   $5^26\cdot B^2$    |
-| $6\cdot A^2B^2$ |  $5\cdot A^2B$  |    $56\cdot A$     |    $5^26\cdot B$     |
-|  $6\cdot AB^2$  | $5\cdot A^2B^2$ |    $56\cdot B$     |   $5^26\cdot A^2$    |
-|  $6\cdot A^2B$  |   $5\cdot AB$   |   $56\cdot B^2$    |    $5^26\cdot A$     |
-
----
-
-### Grouping with $k=6$ from last week
-
-One of the bad combinations: #1, #3, #23.
-
-- #1 = $145$, #3 = $245$, #23 = $1^22^245$.
-
----
-
-### Grouping with $k=4$
+### Property $\alpha$ for $k=4$
 
 | $\alpha$  |  $\beta$  | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
 | :-------: | :-------: | :----------------: | :------------------: |
@@ -116,19 +90,13 @@ One of the bad combinations: #1, #3, #23.
 
 ---
 
-### Grouping with $k=4$
+### Property $\alpha$ for $k=4$
 
-$A_{(1)} = (14, 1^24, 24, 2^24)$
-
-$A_{(2)} = (123, 1^22^23, 12^23, 1^223)$
-
-$B_{(1)} = (23, 2^23, 1^23, 13)$
-
-$B_{(2)} = (12^24, 1^224, 1^22^24, 124)$
+This construction gives $D$ with 8 factors (8/10).
 
 ---
 
-### Grouping with $k=6$
+### Property $\alpha$ for $k=6$
 
 |       $\alpha$        |        $\beta$        |      $\alpha\cdot\beta$      |      $\alpha\cdot\beta^2$      |
 | :-------------------: | :-------------------: | :--------------------------: | :----------------------------: |
@@ -140,6 +108,43 @@ $B_{(2)} = (12^24, 1^224, 1^22^24, 124)$
 | $5^26^2\cdot A_{(2)}$ |  $5^26\cdot B_{(2)}$  |   $5\cdot A_{(2)}B_{(2)}$    |   $6\cdot A_{(2)}B_{(2)}^2$    |
 |  $56^2\cdot A_{(2)}$  | $5^26^2\cdot B_{(2)}$ |   $6\cdot A_{(2)}B_{(2)}$    |  $5^2\cdot A_{(2)}B_{(2)}^2$   |
 |  $5^26\cdot A_{(2)}$  |   $56\cdot B_{(2)}$   |  $6^2\cdot A_{(2)}B_{(2)}$   |   $5\cdot A_{(2)}B_{(2)}^2$    |
+
+---
+
+### Property $\alpha$ for $k=6$
+
+Where
+
+$A_{(1)} = (14, 1^24, 24, 2^24)$
+
+$A_{(2)} = (123, 1^22^23, 12^23, 1^223)$
+
+$B_{(1)} = (23, 2^23, 1^23, 13)$
+
+$B_{(2)} = (12^24, 1^224, 1^22^24, 124)$
+
+This construction gives $D$ with 32 factors (32/91).
+
+---
+
+### Grouping with $A$ not having res. $IV$
+
+|    $\alpha$     |     $\beta$     | $\alpha\cdot\beta$ | $\alpha\cdot\beta^2$ |
+| :-------------: | :-------------: | :----------------: | :------------------: |
+|   $5\cdot A$    |   $6\cdot B$    |    $56\cdot AB$    |   $56^2\cdot AB^2$   |
+|  $5^2\cdot A$   |  $6^2\cdot B$   |  $5^26^2\cdot AB$  |   $5^26\cdot AB^2$   |
+|   $6\cdot A$    |  $5^2\cdot B$   |   $5^26\cdot AB$   |    $56\cdot AB^2$    |
+|  $6^2\cdot A$   |   $5\cdot B$    |   $56^2\cdot AB$   |  $5^26^2\cdot AB^2$  |
+|   $56\cdot A$   |  $56^2\cdot B$  |   $5^2\cdot AB$    |   $6^2\cdot AB^2$    |
+| $5^26^2\cdot A$ |  $5^26\cdot B$  |    $5\cdot AB$     |    $6\cdot AB^2$     |
+|  $56^2\cdot A$  | $5^26^2\cdot B$ |    $6\cdot AB$     |   $5^2\cdot AB^2$    |
+|  $5^26\cdot A$  |   $56\cdot B$   |   $6^2\cdot AB$    |    $5\cdot AB^2$     |
+
+---
+
+### Grouping with $A$ not having res. $IV$
+
+This construction gives $D$ with 64 factors (64/91).
 
 ---
 
@@ -163,3 +168,5 @@ $A = e_1P$
 $B = e_2P$
 $B' = e_1e_2P$
 $B'' = e_1e_2^2P \rightarrow S=(P_0, A, B, B', B'')$
+
+However, $A$ does not have res. $IV$. `s111` and `s211` is not satisfied.
