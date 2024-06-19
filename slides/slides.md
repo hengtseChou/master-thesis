@@ -39,7 +39,7 @@ math: mathjax
 
 # Weekly Meeting
 
-Topic: Need $A$ with resolution $IV$
+Topic: Need $A$ to be resolution $IV$
 
 <br>
 
@@ -90,13 +90,13 @@ $\text{SOA}(n, m, 27, 3)$ has property $\beta$ iff:
 
 ---
 
-### Property $\alpha$ for $k=4$
+### Property $\alpha$ with $k=4$
 
-This construction gives $D$ with 8 factors (8/10).
+This construction provides $D$ with 8 factors (8/10).
 
 ---
 
-### Property $\alpha$ for $k=6$
+### Property $\alpha$ with $k=6$
 
 |       $\alpha$        |        $\beta$        |      $\alpha\cdot\beta$      |      $\alpha\cdot\beta^2$      |
 | :-------------------: | :-------------------: | :--------------------------: | :----------------------------: |
@@ -111,7 +111,7 @@ This construction gives $D$ with 8 factors (8/10).
 
 ---
 
-### Property $\alpha$ for $k=6$
+### Property $\alpha$ with $k=6$
 
 Where
 
@@ -123,7 +123,7 @@ $B_{(1)} = (23, 2^23, 1^23, 13)$
 
 $B_{(2)} = (12^24, 1^224, 1^22^24, 124)$
 
-This construction gives $D$ with 32 factors (32/91).
+This construction provides $D$ with 32 factors (32/91).
 
 ---
 
@@ -144,11 +144,11 @@ This construction gives $D$ with 32 factors (32/91).
 
 ### Grouping with $A$ not having res. $IV$
 
-This construction gives $D$ with 64 factors (64/91).
+This construction provides $D$ with 64 factors (64/91).
 
 ---
 
-### Construct property $\beta$ for $s=2$
+### Property $\beta$ for $s=2$
 
 $P_0 =$ all combinations of $e_3, \dots, e_k$.
 $P = (I, P_0)$
@@ -157,9 +157,11 @@ $A = e_1P$
 $B = e_2P$
 $B' = e_1e_2P \rightarrow S=(P_0, A, B, B')$
 
+`s11`, `s21`, `s111` and `s211` are all satisfied.
+
 ---
 
-### Construct property $\beta$ for $s=3$
+### Property $\beta$ for $s=3$
 
 $P_0 =$ all combinations of $e_3, \dots, e_k$.
 $P = (I, P_0, P_0^2)$
@@ -169,4 +171,4 @@ $B = e_2P$
 $B' = e_1e_2P$
 $B'' = e_1e_2^2P \rightarrow S=(P_0, A, B, B', B'')$
 
-However, $A$ does not have res. $IV$. `s111` and `s211` is not satisfied.
+However, $A$ does not have res. $IV$. `s111` and `s211` are not satisfied.
