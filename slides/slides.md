@@ -172,3 +172,21 @@ $B' = e_1e_2P$
 $B'' = e_1e_2^2P \rightarrow S=(P_0, A, B, B', B'')$
 
 However, $A$ does not have res. $IV$. `s111` and `s211` are not satisfied.
+
+---
+
+### Post-Meeting Notes
+
+New stuffs:
+
+- Find a crirerion to quantify how close a design to $\alpha$ property
+
+- Simulated Annealing to generate a good design (See MaxPro)
+
+- Minimum moment aberration as a criterion to start with.
+
+---
+
+### Minimum moment aberration
+
+![w:1000](image.png)
