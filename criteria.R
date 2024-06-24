@@ -12,5 +12,5 @@ moment_abberation <- function(design, pth_moment) {
           moment_abbr <- moment_abbr + coincidences ^ pth_moment
         }
     }
-    return(moment_abbr)
+    return(moment_abbr * (n * (n-1) / 2) ^ -1)
 }
