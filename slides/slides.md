@@ -179,7 +179,7 @@ However, $A$ does not have res. $IV$. `s111` and `s211` are not satisfied.
 
 New stuffs:
 
-- Find a crirerion to quantify how close a design to $\alpha$ property
+- Find a criterion to quantify how close a design is to $\alpha$ property
 
 - Simulated Annealing to generate a good design (See MaxPro)
 
