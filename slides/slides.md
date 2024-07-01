@@ -45,7 +45,7 @@ Topic: Develop a criteria that is corresponding to property $\alpha$
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: Jun. 26, 2024
+Date: Jul. 5, 2024
 
 ---
 
@@ -55,12 +55,24 @@ Date: Jun. 26, 2024
 
 ---
 
-### Moment aberration
+### P-th power moment
 
-With $n$ runs, $m$ factors and $s$ levels, moment aberrations are denoted as
+(from Xu 2003, but with our notations)
 
-$M(D_{n\times m}) = (M_1, M_2, \dots, M_p)$, where
+With $n$ runs, $m$ factors and $s$ levels, the power moments of $D$ are denoted as $M(D_{n\times m}) = (M_1, M_2, \dots, M_p)$,
 
-$M_k = \sum_{i=1}^{n=1}\sum_{j=i+1}^{n}(p - d_H(x_i, x_j))^k$, and
+where $M_k = (n(n-1)/2)^{-1}\sum_{i=1}^{n}\sum_{j=i+1}^{n}(p - d_H(x_i, x_j))^k$,
 
-$d_H(x_i, x_j) = \sum_{l=1}^p{1}(x_{il} \neq x_{jl})$ being Hamming distance.
+and $d_H(x_i, x_j) = \sum_{l=1}^p{1}(x_{il} \neq x_{jl})$ is known as the Hamming distance between $x_i$ and $x_j$.
+
+---
+
+### P-th power moment
+
+(from Xu 2003)
+
+The power moments measure the similarity among runs.
+
+The first and second power moments measure the average and variance of the similarity among runs.
+
+Minimizing the power moments makes runs be as dissimilar as possible.
