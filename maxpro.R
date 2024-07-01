@@ -1,0 +1,7 @@
+library(MaxPro)
+a=MaxProLHD(81,8) 
+b=MaxPro(a$Design) 
+pairs(b$Design) 
+plot(b$Design[,c(1,4)]) 
+abline(h=seq(0,1,len=10),v=seq(0,1,len=10),col=2)  
+d=floor((b$Design)*8)
