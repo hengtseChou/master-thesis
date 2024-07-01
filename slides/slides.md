@@ -55,7 +55,7 @@ Date: Jul. 5, 2024
 
 ---
 
-### P-th power moment
+### p-th power moment
 
 (from Xu 2003, but with our notations)
 
@@ -67,7 +67,7 @@ and $d_H(x_i, x_j) = \sum_{l=1}^p{1}(x_{il} \neq x_{jl})$ is known as the Hammin
 
 ---
 
-### P-th power moment
+### p-th power moment
 
 (from Xu 2003)
 
@@ -76,3 +76,15 @@ The power moments measure the similarity among runs.
 The first and second power moments measure the average and variance of the similarity among runs.
 
 Minimizing the power moments makes runs be as dissimilar as possible.
+
+---
+
+<!-- _hide: true -->
+
+### Minimum moment aberration
+
+These lower bounds can be used to check if a design is OA.
+
+- $M_1(D) \geq(m(n-s))/((n-1)s)$, with equality iff $D$ is $\text{OA}(1)$.
+- $M_2(D) \geq(nm(n+s-1) - (ms)^2)/((n-1)s^2)$, with equality iff $D$ is $\text{OA}(2)$.
+- $M_3(D) \geq(nm(m^2+3ms+s^2-3m-3s+2)-(ms)^3)/((n-1)s^3)$, with equality iff $D$ is $\text{OA}(3)$.
