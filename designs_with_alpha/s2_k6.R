@@ -26,7 +26,7 @@ B4 <- cbind(
   e1 + e4,
   e1 + e2,
   e2 + e3,
-  e1 + e3 + e4
+  e1 + e3
 )
 
 B6 <- cbind(
