@@ -172,7 +172,7 @@ The algorithm is given as follows:
 
 ### The construction algorithm
 
-3. For $p=3, \dots, m$. do the following:
+3. For $p=3, \dots, m$, do the following:
 
 (a) Randomly generate a balanced $s_p$-level column $c$. Compute $J_2(D_+)$. If $J_2(D_+)=L(p)$, go to (d).
 
@@ -194,6 +194,8 @@ The algorithm is given as follows:
 
 ---
 
-### Issues
+### TODO
 
-how to make it work for soa 3 with property alpha
+- Reproducing the construction algorithm, making sure it works.
+
+- Applying minimum moment aberration and the construction algorithm for $\text{SOA}$ of strength 3 with property $\alpha$.
