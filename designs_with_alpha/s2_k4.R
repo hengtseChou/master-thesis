@@ -11,6 +11,7 @@ A4 <- cbind(
   e1 + e2 + e3 + e4
 )
 A4 <- A4 %% 2
+colnames(A4) <- NULL
 
 B4 <- cbind(
   e3 + e4,
@@ -20,6 +21,7 @@ B4 <- cbind(
   e1 + e3
 )
 B4 <- B4 %% 2
+colnames(B4) <- NULL
 
 D <- 4 * A4 + 2 * B4
 D <- floor(D/2)
