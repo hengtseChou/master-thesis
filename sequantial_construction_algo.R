@@ -1,0 +1,212 @@
+delta_func <- function(xi, xj, weight) {
+  # can accept single points or vectors
+  if (length(xi) != length(xj) || length(xi) != length(weight) || length(xj) != length(weight)) {
+    stop("three arguments must be same length")
+  } 
+  return(sum((xi == xj) * weight))
+}
+
+get_lower_bound <- function(runs, factors, lvls, weights) {
+    term1 <- 0
+    term2 <- 0
+    term3 <- 0
+    for (k in 1:factors) {
+      term1 <- term1 + runs * (1/lvls[k]) * weights[k]
+      term2 <- term2 + (lvls[k] - 1) * (runs * (1/lvls[k]) * weights[k]) ^ 2
+      term3 <- term3 + weights[k]
+    }
+    term1 <- term1 ^ 2
+    term3 <- runs * (term3) ^ 2
+    
+    return((term1 + term2 + term3) / 2)
+}
+
+get_natural_weights <- function(design) {
+  if (NCOL(design) == 1) {
+    return(length(unique(design)))
+  }
+  nw <- c()
+  for (i in 1:ncol(design)) {
+    nw <- c(nw, length(unique(design[, i])))
+  }
+  return(nw)
+}
+
+get_J2_matrix <- function(design, weights) {
+  runs <- nrow(design)
+  factors <- ncol(design)
+  j2_matrix <- matrix(ncol = runs, nrow = runs)
+  # ensure weights is the same length as ncol
+  if (length(weights) != factors) {
+    stop("weights need to be the same length as ncol")
+  }
+  for (i in 1:(runs-1)) {
+    for (j in (i+1):runs) {
+      # m[i, j] <- sum((design[i, ] == design[j, ]) * weights)
+      j2_matrix[i, j] <- delta_func(design[i, ], design[j, ], weights)
+    }
+  }
+  return(j2_matrix)
+}
+
+get_J2 <- function(J2_matrix) {
+  summation <- 0
+  for (i in 1:nrow(J2_matrix)) {
+    for (j in 1:ncol(J2_matrix)) {
+      if (is.na(J2_matrix[i, j])) {
+        next
+      } else {
+        summation <- summation + J2_matrix[i, j]
+      }
+    }
+  }
+  return(summation)
+}
+
+get_random_balanced_column <- function(runs, lvl) {
+  if (runs %% lvl != 0) {
+    stop(paste0("cannot create a balanced ", runs, " runs column with ", lvl, " levels"))
+  }
+  new_col <- rep(0:(lvl-1), runs / lvl)
+  shuffle <- sample(runs, runs)
+  return(new_col[shuffle])
+}
+
+get_updated_J2 <- function(new_column, new_column_weight, J2_matrix) {
+  original_j2 <- get_J2(J2_matrix)
+  updated_j2 <- original_j2
+  for (i in 1:(nrow(J2_matrix)-1)) {
+    for (j in (i+1):ncol(J2_matrix)) {
+      updated_j2 <- updated_j2 + 2 * J2_matrix[i, j] * delta_func(new_column[i], new_column[j], new_column_weight)
+    }
+  }
+  runs <- length(new_column)
+  lvls <- length(unique(new_column))
+  updated_j2 <- updated_j2 + 0.5 * runs * new_column_weight ^ 2 * (runs/lvls - 1)
+  return(updated_j2)
+}
+
+# S(a, b)
+get_S_value <- function(a, b, J2_matrix, new_column) {
+  c <- new_column
+  runs <- length(c)
+  weight <- get_natural_weights(c)
+  summation <- 0
+  for (j in 1:runs) {
+    if ((j == a) || (j == b)) {
+      next
+    } else {
+      summation <- summation + (J2_matrix[a, j] - J2_matrix[b, j]) * (delta_func(c[a], c[j], weight) - delta_func(c[b], c[j], weight))
+    }
+  }
+  return(summation)
+}
+
+get_all_distinct_pairs <- function(new_column) {
+  pairs <- matrix(nrow=0, ncol=2)
+  distinct_elements <- unique(new_column)
+  for (i in distinct_elements) {
+    a <- which(new_column == i)
+    b <- which(new_column != i)
+    pairs <- rbind(pairs, expand.grid(a, b))
+  }
+  return(pairs)
+}
+
+exchange_symbols <- function(a, b, new_column) {
+  updated_column <- new_column
+  element_a <- new_column[a]
+  element_b <- new_column[b]
+  updated_column[a] <- element_b
+  updated_column[b] <- element_a
+  return(updated_column)
+}
+
+sequential_construction <- function(runs, factors, lvls, weights, T1, T2) {
+  if (factors != length(lvls)) {
+    stop("Must specify lvls as a vector of length same as the number of factors")
+  }
+  if (factors != length(weights)) {
+    stop("Must specify weights as a vector of length same as the number of factors")
+  }
+  for (i in 1:factors) {
+    if (runs %% lvls[i] != 0) {
+      stop("Number of runs must be divisible by lvls")
+    }
+  }
+  
+  # main 
+  num_of_OA_columns <- 0
+  n.iter <- 0
+  # 1. calculate lower bounds
+  lb <- c()
+  for (p in 1:factors) {
+    lb <- c(lb, get_lower_bound(runs, p, lvls, weights))
+  }
+  # 2. specify initial design with 2 columns
+  col1 <- rep(0:(lvls[1]-1), each=runs/lvls[1])
+  col2 <- rep(0:(lvls[2]-1), times=runs/lvls[2])
+  final_design <- cbind(col1, col2)
+  if (get_J2(get_J2_matrix(final_design, weights[1:2])) == lb[2]) {
+    num_of_OA_columns <- 2
+    n.iter <- T1
+  } else {
+    num_of_OA_columns <- 0
+    n.iter <- T2
+  }
+  # 3.
+  for (p in 3:factors) {
+    new_column_with_smallest_J2 <- c()
+    smallest_J2 <- 10^6
+    reached_lb <- FALSE
+    current_j2_matrix <- get_J2_matrix(final_design, weights[1:(p-1)])
+    current_j2 <- get_J2(current_j2_matrix)
+    for (t in 1:n.iter) {
+      # step a
+      new_column <- get_random_balanced_column(runs, lvls[p])
+      updated_j2 <- get_updated_J2(new_column, weights[p], current_j2_matrix)
+      if (updated_j2 == lb[p]) {
+        reached_lb <- TRUE
+        break # breaking for loop
+      }
+      # step b
+      while (TRUE) {
+        pairs <- get_all_distinct_pairs(new_column)
+        all_S_values <- c()
+        for (i in 1:nrow(pairs)) {
+          a <- pairs[i, 1]
+          b <- pairs[i, 2]
+          all_S_values <- c(all_S_values, get_S_value(a, b, current_j2_matrix, new_column))
+        }
+        print(all_S_values)
+        largest_S_value <- max(all_S_values)
+        if (largest_S_value == 0) {
+          break # breaking while loop
+        }
+        pair_with_largest_S_value <- which(all_S_values == largest_S_value)[1]
+        updated_j2 <- updated_j2 - 2 * largest_S_value
+        new_column <- exchange_symbols(pair_with_largest_S_value[1], pair_with_largest_S_value[2], new_column)
+        if (updated_j2 == lb[p]) {
+          reached_lb <- TRUE
+          break # breaking while loop
+        }
+      }
+      if (reached_lb) {
+        break # breaking for loop
+      }
+      # step c
+      if (updated_j2 < smallest_J2) {
+        smallest_J2 <- updated_j2
+        new_column_with_smallest_J2 <- new_column
+      }
+    }
+    # step d
+    final_design <- cbind(final_design, new_column_with_smallest_J2)
+    if (reached_lb) {
+      num_of_OA_columns <- p
+    } else {
+      n.iter <- T2
+    }
+  }
+  return(list(design=final_design, m0=num_of_OA_columns))
+}
