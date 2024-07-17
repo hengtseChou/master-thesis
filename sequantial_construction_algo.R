@@ -39,15 +39,8 @@ get_J2_matrix <- function(design, weights) {
   return(j2_matrix)
 }
 
-get_J2 <- function(J2_matrix) {
-  runs <- nrow(J2_matrix)
-  summation <- 0
-  for (i in 1:(runs-1)) {
-    for (j in (i+1):runs) {
-      summation <- summation + J2_matrix[i, j]
-    }
-  }
-  return(summation)
+get_J2 <- function(j2_matrix) {
+  return(sum(j2_matrix[upper.tri(j2_matrix)]))
 }
 
 get_random_balanced_column <- function(runs, lvl) {
@@ -85,7 +78,7 @@ get_S_value <- function(a, b, J2_matrix, new_column, new_column_weight) {
       summation <- summation + (J2_matrix[a, j] - J2_matrix[b, j]) * (delta_func(c[a], c[j], new_column_weight) - delta_func(c[b], c[j], new_column_weight))
     }
   }
-  return(summation) # 這邊明明漏掉了 * -1
+  return(summation)
 }
 
 get_all_distinct_pairs <- function(new_column) {
@@ -188,7 +181,7 @@ sequential_construction <- function(runs, lvls, T1, T2, weights, debug_mode) {
         if (largest_S_value <= 0) {
           break # breaking while loop
         }
-        pair_with_largest_S_value <- as.numeric(pairs[which(all_S_values == largest_S_value)[1], ])
+        pair_with_largest_S_value <- as.numeric(pairs[which.max(all_S_values)[1], ])
         updated_j2 <- updated_j2 - 2 * largest_S_value
         new_column <- exchange_symbols(pair_with_largest_S_value[1], pair_with_largest_S_value[2], new_column)
         if (updated_j2 <= lb[p]) {
@@ -216,8 +209,8 @@ sequential_construction <- function(runs, lvls, T1, T2, weights, debug_mode) {
       n.iter <- T2 + 1
     }
   }
-  elapsed_time <- (proc.time() - start_time)[3]
-  elapsed_time <- setNames(elapsed_time, NULL)
+  elapsed_time <- (proc.time() - start_time)
+  # elapsed_time <- setNames(elapsed_time, NULL)
   if (debug_mode) {
     return(list(
       design=final_design, 
@@ -230,11 +223,6 @@ sequential_construction <- function(runs, lvls, T1, T2, weights, debug_mode) {
   return(list(design=final_design, m0=num_of_OA_columns))
 }
 
-# test case
-runs <- 12
-lvls <- c(3, rep(2, 4))
-T1 <- 100
-T2 <- 0 # find OA
 sequential_construction(runs = 9, lvls = rep(3, 4), debug_mode = T) # output an OA every time
 sequential_construction(runs = 12, lvls = c(3, rep(2, 4)), debug_mode = T) # should give an OA with j2=1506 sometimes
 sequential_construction(runs = 12, lvls = rep(2, 11), debug_mode = T)
