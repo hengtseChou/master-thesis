@@ -1,46 +1,23 @@
-delta_func <- function(xi, xj, weight) {
-  # can accept single points or vectors
-  if (length(xi) != length(xj) || length(xi) != length(weight) || length(xj) != length(weight)) {
-    stop("three arguments must be same length")
-  } 
-  return(sum((xi == xj) * weight))
+get_lower_bound <- function(N,m,s,w){# the lower bound of J_2(d) in Lemma 1
+  (sum(N*w/s)^2+N^2*sum((s-1)*(w/s))-N*sum(w)^2)/2
 }
 
-get_lower_bound <- function(runs, factors, lvls, weights) {
-    term1 <- 0
-    term2 <- 0
-    term3 <- 0
-    for (k in 1:factors) {
-      term1 <- term1 + runs * (1/lvls[k]) * weights[k]
-      term2 <- term2 + (lvls[k] - 1) * (runs * (1/lvls[k]) * weights[k]) ^ 2
-      term3 <- term3 + weights[k]
-    }
-    term1 <- term1 ^ 2
-    term3 <- runs * (term3) ^ 2
-    return((term1 + term2 - term3) / 2)
-}
-
-get_J2_matrix <- function(design, weights) {
+get_delta_mtx <- function(design, weights) {
+  design <- cbind(design)
   runs <- nrow(design)
-  factors <- ncol(design)
-  j2_matrix <- matrix(ncol = runs, nrow = runs)
-  # ensure weights is the same length as ncol
-  if (length(weights) != factors) {
-    stop("weights need to be the same length as ncol")
-  }
-  for (i in 1:(runs-1)) {
-    for (j in (i+1):runs) {
-      # m[i, j] <- sum((design[i, ] == design[j, ]) * weights)
-      j2 <- (delta_func(design[i, ], design[j, ], weights)) ^ 2
-      j2_matrix[i, j] <- j2
-      j2_matrix[j, i] <- j2
+  mtx <- matrix(0, runs, runs)
+  for (i in 1:(runs - 1)) {
+    for (j in (i + 1):runs) {
+      delta <- sum((design[i, ] == design[j, ]) * weights)
+      mtx[i, j] <- delta
+      mtx[j, i] <- delta
     }
   }
-  return(j2_matrix)
+  return(mtx)
 }
 
-get_J2 <- function(j2_matrix) {
-  return(sum(j2_matrix[upper.tri(j2_matrix)]))
+get_j2 <- function(delta_mtx) {
+  return(sum(delta_mtx ^ 2) / 2)
 }
 
 get_random_balanced_column <- function(runs, lvl) {
@@ -52,66 +29,42 @@ get_random_balanced_column <- function(runs, lvl) {
   return(new_col[shuffle])
 }
 
-get_updated_J2 <- function(new_column, new_column_weight, J2_matrix) {
-  original_j2 <- get_J2(J2_matrix)
-  updated_j2 <- original_j2
-  for (i in 1:(nrow(J2_matrix)-1)) {
-    for (j in (i+1):ncol(J2_matrix)) {
-      updated_j2 <- updated_j2 + 2 * J2_matrix[i, j] * delta_func(new_column[i], new_column[j], new_column_weight)
-    }
-  }
-  runs <- length(new_column)
-  lvl <- length(unique(new_column))
-  updated_j2 <- updated_j2 + 0.5 * runs * new_column_weight ^ 2 * (runs/lvl - 1)
-  return(updated_j2)
-}
-
-# S(a, b)
-get_S_value <- function(a, b, J2_matrix, new_column, new_column_weight) {
-  c <- new_column
-  runs <- length(c)
-  summation <- 0
-  for (j in 1:runs) {
-    if ((j == a) || (j == b)) {
-      next
-    } else {
-      summation <- summation + (J2_matrix[a, j] - J2_matrix[b, j]) * (delta_func(c[a], c[j], new_column_weight) - delta_func(c[b], c[j], new_column_weight))
-    }
-  }
-  return(summation)
-}
-
-get_all_distinct_pairs <- function(new_column) {
-  pairs <- matrix(nrow=0, ncol=2)
+get_distinct_pairs <- function(new_column) {
+  pairs <- matrix(nrow = 0, ncol = 2)
   distinct_elements <- unique(new_column)
   for (i in distinct_elements) {
     a <- which(new_column == i)
     b <- which(new_column != i)
     pairs <- rbind(pairs, expand.grid(a, b))
   }
+  pairs <- pairs[1:(nrow(pairs)/2), ]
   return(pairs)
 }
 
 exchange_symbols <- function(a, b, new_column) {
-  updated_column <- new_column
-  element_a <- new_column[a]
-  element_b <- new_column[b]
-  updated_column[a] <- element_b
-  updated_column[b] <- element_a
-  return(updated_column)
+  new_column[c(a, b)] <- new_column[c(b, a)]
+  return(new_column)
 }
 
-sequential_construction <- function(runs, lvls, T1, T2, weights, debug_mode) {
+
+runs <- 12
+factors <- 11
+lvls <- rep(2, 11)
+weights <- rep(2, 11)
+t1 <- 100
+t2 <- 10
+
+construct_oa_noa <- function(runs, lvls, weights, t1, t2, debug_mode) {
   factors <- length(lvls)
   if (missing(weights)) {
     # if weights are not specified, use natural weights
     weights <- lvls
   }
-  if (missing(T1)) {
-    T1 <- 100
+  if (missing(t1)) {
+    t1 <- 100
   }
-  if (missing(T2)) {
-    T2 <- 100
+  if (missing(t2)) {
+    t2 <- 100
   }
   if (missing(debug_mode)) {
     debug_mode <- FALSE
@@ -127,102 +80,104 @@ sequential_construction <- function(runs, lvls, T1, T2, weights, debug_mode) {
       stop("Number of runs must be divisible by lvls")
     }
   }
-  
-  # main 
+
   start_time <- proc.time()
-  num_of_OA_columns <- 0
-  n.iter <- 0
+  m0 <- 0
+  iter <- 0
   # 1. calculate lower bounds
   lb <- c()
   for (p in 1:factors) {
-    lb <- c(lb, get_lower_bound(runs, p, lvls, weights))
+    lb <- c(lb, get_lower_bound(runs, p, lvls[1:p], weights[1:p]))
   }
   # 2. specify initial design with 2 columns
-  col1 <- rep(0:(lvls[1]-1), each=runs/lvls[1])
-  col2 <- rep(0:(lvls[2]-1), times=runs/lvls[2])
-  final_design <- cbind(col1, col2)
-  initial_design_j2 <- get_J2(get_J2_matrix(final_design, weights[1:2]))
-  j2_stack <- c(NA, initial_design_j2)
-  iter_spent <- c(NA, NA)
-  # add 1 is because what we need is to repeat T times after the initial execution
-  if (initial_design_j2 == lb[2]) {
-    num_of_OA_columns <- 2
-    n.iter <- T1 + 1
+  col1 <- rep(0:(lvls[1] - 1), each = runs / lvls[1])
+  col2 <- rep(0:(lvls[2] - 1), times = runs / lvls[2])
+  design <- cbind(col1, col2)
+  delta_mtx <- get_delta_mtx(design, weights[1:2])
+  j2 <- get_j2(delta_mtx)
+  j2_stack <- c(NA, j2)
+  iter_stack <- c(NA, NA)
+  if (j2 == lb[2]) {
+    m0 <- 2
+    iter <- t1
   } else {
-    num_of_OA_columns <- 0
-    n.iter <- T2 + 1
+    m0 <- 0
+    iter <- t2
   }
-  # 3.
   for (p in 3:factors) {
-    new_column_with_smallest_J2 <- c()
-    new_column <- c()
-    smallest_J2 <- 10^6
-    reached_lb <- FALSE
-    current_j2_matrix <- get_J2_matrix(final_design, weights[1:(p-1)])
-    current_j2 <- get_J2(current_j2_matrix)
-    for (t in 1:n.iter) {
-      # step a
+
+    new_column_with_smallest_j2 <- c()
+    smallest_j2 <- 10^6
+
+    for (t in 1:(iter + 1)) {
+
       new_column <- get_random_balanced_column(runs, lvls[p])
-      updated_j2 <- get_updated_J2(new_column, weights[p], current_j2_matrix)
-      if (updated_j2 <= lb[p]) {
-        reached_lb <- TRUE
-        break # breaking for loop
+      new_column_delta <- get_delta_mtx(new_column, weights[p])
+      updated_j2 <- j2 + sum(delta_mtx * new_column_delta) + 0.5 * runs * weights[p] ^ 2 * (runs / lvls[p] - 1)
+      if (updated_j2 == lb[p]) {
+        new_column_with_smallest_j2 <- new_column
+        smallest_j2 <- updated_j2
+        m0 <- p
+        break
       }
-      # step b
+      
       while (TRUE) {
-        pairs <- get_all_distinct_pairs(new_column)
-        all_S_values <- c()
+        reduce <- 0; aa=bb=0
+        pairs <- get_distinct_pairs(new_column)
         for (i in 1:nrow(pairs)) {
-          a <- pairs[i, 1]
-          b <- pairs[i, 2]
-          all_S_values <- c(all_S_values, get_S_value(a, b, current_j2_matrix, new_column, weights[p]))
+          ab <- as.numeric(pairs[i, ])
+          reduce.new=sum((delta_mtx[-ab,ab[1]]-delta_mtx[-ab,ab[2]])*(new_column_delta[-ab,ab[1]]-new_column_delta[-ab,ab[2]])) #equation (5)
+          if (reduce.new>reduce) {aa=ab[1];bb=ab[2];reduce=reduce.new}
         }
-        largest_S_value <- max(all_S_values)
-        if (largest_S_value <= 0) {
-          break # breaking while loop
+        new_column[c(aa, bb)] <- new_column[c(bb, aa)]
+        new_column_delta <- get_delta_mtx(new_column, weights[p])
+        updated_j2 <- updated_j2 - 2 * reduce
+        if (updated_j2 == lb[p]) {
+          new_column_with_smallest_j2 <- new_column
+          smallest_j2 <- updated_j2
+          m0 <- p
+          break
         }
-        pair_with_largest_S_value <- as.numeric(pairs[which.max(all_S_values)[1], ])
-        updated_j2 <- updated_j2 - 2 * largest_S_value
-        new_column <- exchange_symbols(pair_with_largest_S_value[1], pair_with_largest_S_value[2], new_column)
-        if (updated_j2 <= lb[p]) {
-          reached_lb <- TRUE
-          break # breaking while loop
+        if (reduce <= 0) {
+          break # no further improvement
         }
       }
-      # step c
-      if (updated_j2 <= smallest_J2) {
-        smallest_J2 <- updated_j2
-        new_column_with_smallest_J2 <- new_column
+
+      if (updated_j2 <= smallest_j2) {
+        smallest_j2 <- updated_j2
+        new_column_with_smallest_j2 <- new_column
       }
-      if (reached_lb) {
-        break # breaking for loop
+      
+      if (smallest_j2 == lb[p]) {
+        m0 <- p
+        break
       }
     }
-    # step d
-    final_design <- cbind(final_design, new_column_with_smallest_J2)
-    j2_stack <- c(j2_stack, smallest_J2)
-    iter_spent <- c(iter_spent, t)
-    colnames(final_design) <- paste0(rep("col", p), 1:p)
-    if (reached_lb) {
-      num_of_OA_columns <- p
-    } else {
-      n.iter <- T2 + 1
+    
+    design <- cbind(design, new_column_with_smallest_j2)
+    colnames(design) <- paste0("col", 1:p)
+    delta_mtx <- get_delta_mtx(design, weights[1:p])
+    j2 <- get_j2(delta_mtx)
+    j2_stack <- c(j2_stack, j2)
+    if ((p < factors) & (j2 != lb[p+1])) {
+      iter <- t2
     }
+    iter_stack <- c(iter_stack, t)
   }
-  elapsed_time <- (proc.time() - start_time)
-  # elapsed_time <- setNames(elapsed_time, NULL)
+
+  elapsed_time <- proc.time() - start_time
   if (debug_mode) {
     return(list(
-      design=final_design, 
-      m0=num_of_OA_columns, 
-      j2_at_each_p=j2_stack, 
+      design=design, 
+      m0=m0, 
       theoretical_lower_bounds=lb,
-      iterations_for_each_p=iter_spent, 
+      j2_at_each_p=j2_stack, 
+      iterations_for_each_p=iter_stack, 
       time_spent=elapsed_time))
   }
-  return(list(design=final_design, m0=num_of_OA_columns))
+  return(list(design=design, m0=m0))
 }
 
-sequential_construction(runs = 9, lvls = rep(3, 4), debug_mode = T) # output an OA every time
-sequential_construction(runs = 12, lvls = c(3, rep(2, 4)), debug_mode = T) # should give an OA with j2=1506 sometimes
-sequential_construction(runs = 12, lvls = rep(2, 11), debug_mode = T)
+construct_oa_noa(runs = 12, lvls = rep(2, 11), debug_mode = T)
+construct_oa_noa(runs = 20, lvls = c(5, rep(2, 6)), debug_mode = T)
+
