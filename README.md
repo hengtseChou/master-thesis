@@ -98,9 +98,9 @@ In Shi and Tang's, a theorem is derived for property $\beta$:
 
 A construction of the required designs $A$ and $B$ is also given:
 
-$P_0: $e_3, \dots, e_k$ and all of their interactions. $P = (I, P_0)$.
+$P_0: e_3, \dots, e_k$ and all of their interactions. $P = (I, P_0)$.
 
-Then, $S = (P_0, e_1 P_0, e_2 P_0, e_1 e_2 P_0).
+Then, $S = (P_0, e_1 P_0, e_2 P_0, e_1 e_2 P_0)$.
 
 We can have $A = e_1 P_0$ and $B = e_2 P_0$, so that $B' = e_1 e_2 P_0$.
 
