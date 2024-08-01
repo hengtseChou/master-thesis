@@ -6,17 +6,20 @@ color: black
 backgroundImage: url('https://i.imgur.com/BgTCqJd.png')
 style: |
   section {
-    padding-top: 150px;
+    padding-top: 140px;
     padding-left: 200px;
     padding-right: 150px;
   }
   p {
-    font-size: 26px;
+    font-size: 24px;
     line-height: 1.5;
   } 
   li {
-    font-size: 26px;
+    font-size: 24px;
     line-height: 1.5;
+  }
+  h1 {
+    font-size: 48px;
   }
   code {
     background-color: #dbdbdb;
@@ -26,10 +29,11 @@ style: |
     font-size: 24px;
   }
   section.cover h1 {
-    padding-top: 60px;
-    padding-bottom: 10px;
+    font-size: 70px;
   }
   section.cover p {
+    padding-top: 5px;
+    padding-bottom: 5px;
     line-height: 0.8;
   }
 math: mathjax
@@ -37,165 +41,150 @@ math: mathjax
 
 <!-- _class: cover -->
 
+<br>
+
 # Weekly Meeting
 
-Topic: Construction Algorithm for $\text{SOA}$ of strength 3 with property $\alpha$
+Topic: Construction algorithm for SOA of strength 3 with property $\alpha$
 
 <br>
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: Jul. 5, 2024
+Date: Aug. 2, 2024
 
 ---
 
-### Goal
+# Recap
 
-- We want to find a metric that can measure, or quantify how close a $\text{SOA}$ of strength 3 is to have property $\alpha$, that is, stratification on $s^2\times s^2$ grids in all 2-dims for $s=3$.
-- This metric should help us in constructing $\text{SOA}$ of strength 3 with the desired property.
+$\text{SOA}(n, m, s^3, 3)$ can achieve stratification on
 
----
+1. $s\times s\times s$ grids for all 3-dimensions.
+2. $s\times s^2$ grids for all 2-dimensions.
+3. $s^2\times s$ grids for all 2-dimensions.
 
-### Minimum moment aberration
-
-(from Xu 2003, but with our notations)
-
-With $n$ runs, $m$ factors and $s$ levels, the $p$-th power moment of $D$ is defined by $K_p = (n(n-1)/2)^{-1}\sum_{i=1}^{n}\sum_{j=i+1}^{n}(\delta(x_i, x_j))^p$,
-
-where $\delta(x_i, x_j) = \sum_{k=1}^m{1}(x_{ik} = x_{jk})$.
-
-$m - \delta(x_i, x_j)$ is known as the Hamming distance between $x_i$ and $x_j$.
+Having property $\alpha$ means that the SOA also achieve stratification on $s^2\times s^2$ grids for all 2-dimensions.
 
 ---
 
-### Minimum moment aberration
+# Constructing SOA of strength 3
 
-(from Xu 2003)
+**Method (a)**
 
-The power moments measure the similarity among runs.
+Let $\left\{
+\begin{array}{l}
+A=(a_1, \dots, a_m) \\
+B=(b_1, \dots, b_m) \\
+C=(c_1, \dots, c_m)
+\end{array}
+\right.$
 
-The first and second power moments measure the average and variance of the similarity among runs.
+s.t. $(a_i, a_j, a_u)$, $(a_i, a_j, b_j)$, and $(a_i, b_i, c_i)$ are $\text{OA}(n, 3, s, 3) \; \forall i\neq j$.
 
-Minimizing the power moments makes runs be as dissimilar as possible.
+Then $D=s^2A+sB+C$ is $\text{SOA}(n, m, s^3, 3)$.
 
----
-
-### Minimum moment aberration
-
-These lower bounds can be used to check if a design is OA.
-
-- $K_1(D) \geq(m(n-s))/((n-1)s)$, with equality iff $D$ is $\text{OA}(1)$.
-- $K_2(D) \geq(nm(n+s-1) - (ms)^2)/((n-1)s^2)$, with equality iff $D$ is $\text{OA}(2)$.
-- $K_3(D) \geq(nm(m^2+3ms+s^2-3m-3s+2)-(ms)^3)/((n-1)s^3)$, with equality iff $D$ is $\text{OA}(3)$.
+Moreover, D has property $\alpha$ iff $(a_i, b_i, a_j, b_j)$ is $\text{OA}(n, 4, s, 4)\; \forall i \neq j$.
 
 ---
 
-### $J_2$-optimality
+# Constructing SOA of strength 3
 
-(Xu 2000)
+**Method (b)**
 
-Now let $\delta_{i, j}(D) = \sum_{k=1}^mw_k\delta(x_{ik}, x_{jk})$, where $\delta(x,y)=1$ if $x=y$ and 0 otherwise.
+Let $A$ be $\text{OA}(n, m+1, s, 3)$,
+and $B = \{(b_{11}b_{12}b_{13});\dots;(b_{m1}b_{m2}b_{m3})\}$ be an $n\times3m$ array with
 
-Define $J_2(D) = \sum_{i=1}^{n}\sum_{j=i+1}^{n}\left[\delta_{i,j}(D)\right]^2$.
+$\left\{
+\begin{array}{l}
+(b_{11}, \dots, b_{m1}) = (a_1, \dots, a_m) \\
+(b_{12}, \dots, b_{m2}) = (a_{m+1}, \dots, a_{m+1}) \\
+(b_{13}, \dots, b_{m3}) = (a_2, \dots, a_m, a_1)
+\end{array}
+\right.$
 
-A design is called $J_2$-optimal if it minimizes $J_2$.
-
----
-
-### $J_2$-optimality
-
-For a mixed level design $D$ with each column having $s_k$ levels,
-
-$L(m) = 2^{-1}\left[(\sum_{k=1}^mns_k^{-1}w_k)^2 + (\sum_{k=1}^m(s_k-1)(ns_k^{-1}w_k)^2) - n(\sum_{k=1}^mw_k)^2\right].$
-
-We have $J_2(D)\geq L(m)$, where the equality holds iff $D$ is an $\text{OA}$ of strength 2.
-
-The $J_2$-optimality is a special case of the minimum moment aberration.
+Then $D$ is $\text{SOA}(n, m, s^3, 3)$ with $d_i=\sum_{j=1}^3b_{ij}s^{3-j}$.
 
 ---
 
-### The construction algorithm
+# Constructing SOA of strength 3
 
-The algorithm is aimed to generate mixed level $\text{OA}$ and $\text{NOA}$.
+**Example**
 
-Main idea: sequentially add columns to an existing design.
+Let $A$ be an $\text{OA}(8, 4, 2, 3)$, we obtain array $B = \{(a_1\;a_4\;a_2);(a_2\;a_4\;a_3);(a_3\;a_4\;a_1)\}$.
 
-(1) Consider adding a column $c=(c_1, \dots, c_n)'$ to $D$.
+Then we generate $D=\text{SOA}(8, 3, 2^3, 3) = (d_1, d_2, d_3)$ by
 
-Let $D_+$ be the new $n\times(m+1)$ design.
-
-If $c$ has $s_p$ levels and weight $w_p$, then $\delta_{i, j}(D_+) = \delta_{i, j}(D)+\delta_{i, j}(c)$,
-
-where $\delta_{i, j}(c) = w_p\delta(c_i, c_j)$.
+$d_1 = 4a_1 + 2a_4 + a_2 \cdots\cdots (1)$
+$d_2 = 4a_2 + 2a_4 + a_3 \cdots\cdots (2)$
+$d_3 = 4a_3 + 2a_4 + a_1 \cdots\cdots (3)$
 
 ---
 
-### The construction algorithm
+# Two algorithms
 
-Moreover,
-
-$J_2(D_+) = J_2(D) + 2\sum_{i=1}^n\sum_{j=i+1}^n\delta_{i,j}(D)\delta_{i,j}(c) + (n/2)w_p^2(s_p/n-1)$
-
-if the added column is balanced.
+1. Sequential construction algorithm.
+2. "Find lowest neighbor" algorithm.
 
 ---
 
-### The construction algorithm
+# Algo: Sequential construction.
 
-(2) Consider switching a pair of symbols in the added column.
+Idea:
 
-Suppose the symbols in rows $a$ and $b$ of the added column are distinct, i.e., $c_a \neq c_b$.
-
-If these two symbols are exchanged, then all $\delta_{i,j}(c)$ are unchanged except that $\delta_{a_j}(c) = \delta_{j, a}(c)$ and $\delta_{b,j}(c) = \delta_{j,b}(c)$ are switched for $j \neq a, b$.
-
----
-
-### The construction algorithm
-
-Hence, $J_2(D_+)$ is reduced by $2S(a,b)$, where
-
-$S(a, b) = -\sum_{1\leq j\neq a,b\leq n}\left[\delta_{a,j}(D) - \delta_{b,j}(D)\right]\left[\delta_{a,j}(c) - \delta_{b,j}(c)\right]$
-
-For each candidate column, the algorithm searches all possible interchanges and makes an interchange which reduces $J_2$ most.
+- Adding random balanced columns one by one.
+- Exchange symbols within the newly added column until the design is an OA, or there is no more improvement can be made.
+- Metric: $J_2(D) = \sum_{i=1}^{n}\sum_{j=i+1}^{n}\left[\delta_{i,j}(D)\right]^2$, which is minimized when design $D$ is an OA.
 
 ---
 
-### The construction algorithm
+# Algo: Find lowest neighbor
 
-The algorithm is given as follows:
+Idea:
 
-1. For $p=1,\dots,n$, compute the lower bound $L(p)$.
-2. Specify an initial design $D$ with two columns: $(0, \dots, 0, 1, \dots , 1, \dots , s_1 − 1, \dots , s_1 − 1)$ and $(0, \dots , s_2 − 1, 0, \dots , s_2 − 1, \dots , 0,\dots , s_2 − 1)$.
-   Compute $\delta_{i,j}(D)$ and $J_2(D)$. If $J_2(D) = L(2)$, let $m_0 = 2$ and $T = T_1$; otherwise, let $m_0 = 0$ and $T = T_2$.
-
----
-
-### The construction algorithm
-
-3. For $p=3, \dots, m$, do the following:
-
-(a) Randomly generate a balanced $s_p$-level column $c$. Compute $J_2(D_+)$. If $J_2(D_+)=L(p)$, go to (d).
-
-(b) For all pairs of row $a$ and $b$ with distinct symbols, compute $S(a, b).$ Choose a pair of rows with largest $S(a, b)$ and exchange the symbols in rows $a$ and $b$ of column $c$. Reduce $J_2(D_+)$ by $2S(a,b)$. If $J_2(D_+)=L(p)$, go to (d); otherwise, repeat this procedure until no further improvement is made.
+- Obtain an $\text{OA}(n,m+1, s, 3)$ and construct an initial SOA based on method (b) as $D_0$
+- Obtain "one-unit away neighbors" of $D_0$. The one-unit away neighbours around $D_0$ can be obtained by permuting symbols in just one column of the OA, $a_i$, in the formulas (1) to (3).
 
 ---
 
-### The construction algorithm
+# Algo: Find lowest neighbor
 
-(c) Repeat (a) and (b) $T$ times and choose a column $c$ that produces the smallest $J_2(D_+)$.
-
-(d) Add column $c$ as the $p$-th column of $D$, let $J_2(D)=J_2(D_+)$ and update $\delta_{i,j}(D)$. If $J_2(D_+)=L(p)$, let $m_0 = p$; otherwise, let $T=T_2$.
-
----
-
-### The construction algorithm
-
-4. Return the final $n\times m$ design $D$, of which the first $m_0$ columns form an $\text{OA}$.
+- Compute $\Phi_p$ values by $\Phi_p(D) = (\sum_{j=1}^md_j^{-p})^{1/p}$, where $d_j$ represented the distinct distances between design points sorted in ascending order, and here $m$ is the total number of point pairs.
+- Replace the current design $D_0$ by one of the designs that minimizes $\Phi_p$.
+- If the current design is lowest, compute $\Phi_p$ of the "two-units away neighbors". Replace the current design $D_0$ by one of the designs that minimizes $\Phi_p$.
+- Repeat the procedure until the current design has the lowest $\Phi_p$.
 
 ---
 
-### TODO
+# Algo: Find lowest neighbor
 
-- Reproducing the construction algorithm, making sure it works.
+- $\Phi_P$ is a metric that helps us to find a **maximin distance design**.
+- Maximin distance design: A design that maximizes the minimum inter-site distance.
+- It is undesirable to have design points that are too close, so the maximin criterion tries to avoid such cases.
 
-- Applying minimum moment aberration and the construction algorithm for $\text{SOA}$ of strength 3 with property $\alpha$.
+---
+
+# Issues for us
+
+**Sequential construction:**
+
+- Need to figure out how to sequentially add column for $\text{SOA}$.
+- Criterion function.
+
+---
+
+# Issues for us
+
+**Find lowest neighbor:**
+
+- This algo uses construction method (b), while we were using method (a) for constructing SOA with property $\alpha$.
+- Method (a) will need to decide 2 OAs at the beginning.
+- Criterion function.
+
+---
+
+# Criterion function
+
+1. Property $\alpha$ exists iff $(a_i, b_i, a_j, b_j)$ is $\text{OA}(n, 4, s, 4)\; \forall i \neq j$.
+2. $J_2$ can tell us if a design is OA by giving us a lower bound.
+
+$\rightarrow$ Use a construction algorithm similar to "find lowest neighbor", but replace "minimizing $\Phi_p$" by "minimizing the summation of $J_2$ of $(a_i, b_i, a_j, b_j)\; \forall i \neq j$".
