@@ -179,5 +179,6 @@ construct_oa_noa <- function(runs, lvls, weights, t1, t2, debug_mode) {
 }
 
 construct_oa_noa(runs = 12, lvls = rep(2, 11), debug_mode = T)
-construct_oa_noa(runs = 20, lvls = c(5, rep(2, 6)), debug_mode = T)
+construct_oa_noa(runs = 27, lvls = c(9, rep(3, 9)), debug_mode = T)
+construct_oa_noa(runs = 81, lvls = rep(9, 5), debug_mode = T)
 
