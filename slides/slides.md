@@ -61,7 +61,7 @@ Consider a symmetric OA, $\text{OA}(n, m, s^p, t)$, $s$ denotes the base level.
 
 $\mathbb{Z}_s = \{0, 1, \dots, s-1\}$ and $\mathbb{Z}_{s^p} = \{0, 1, \dots, s^p-1\}$ are collections of level settings.
 
-1. For $x\in\mathbb{Z}_{s^p}$, let $f_i(x) = \lfloor x/s{p-i}\rfloor \;\text{mod} \;s$, which represents the $i$th dight of $x$ in the base-$s$ numeral system.
+1. For $x\in\mathbb{Z}_{s^p}$, let $f_i(x) = \lfloor x/s^{p-i}\rfloor \;\text{mod} \;s$, which represents the $i$th dight of $x$ in the base-$s$ numeral system.
 
 2. Define $\rho(x) = p+1-\min\{i:f_i(x)\neq0,i=1,\dots,p\}$ if $x\neq0$ and $\rho(0)=0$. $\rho(x)$ represents the number of digits needed to express $x$ in the base-$s$ numeral system (after eliminating all the leading zeros).
 
@@ -186,3 +186,9 @@ Simply put, $\Sigma$-pattern **prioritize grids over dimensions** while minimizi
 **Example (notations of $i$ and $j$ are switched)**
 
 ![w:800](eg1.png)
+
+---
+
+# TODO
+
+- Read SOA strength 2+, implement an algorithm if an design $A$ can be used to construct SOA 2+
