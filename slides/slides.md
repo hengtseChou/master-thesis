@@ -191,4 +191,4 @@ Simply put, $\Sigma$-pattern **prioritize grids over dimensions** while minimizi
 
 # TODO
 
-- Read SOA strength 2+, implement an algorithm if an design $A$ can be used to construct SOA 2+
+- Read SOA strength 2+, implement an algorithm to check if an design $A$ can be used to construct SOA 2+
