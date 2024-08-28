@@ -76,54 +76,76 @@ for (i in 2:nrow(form_line_duplicated)) {
 # -------------------------------------------------------------------------------------- #
 # find design A that satisfies thm3 from "STRONG ORTHOGONAL ARRAYS OF STRENGTH TWO PLUS"
 saturated <- 1:40
-good_A <- c()
+good_A_idx <- c()
+comp_good_A_idx <- c()
 for (i in 1:length(ffd81_columns)) {
   columns <- as.numeric(unlist(strsplit(ffd81_columns[i], " ")))
-  complementary <- setdiff(saturated, columns)
+  complementary <- saturated[-columns]
   columns_form_line <- rep(F, length(columns))
+  # original design
   for (j in 1:length(columns)) {
-    form_line_lookup_idx <- which(form_line[, 1] == columns[j])
+    form_line_lookup_idx <- which(apply(form_line == columns[j], 1, sum) == 1)
     for (k in form_line_lookup_idx) {
-      if (setequal(intersect(complementary, form_line[k, -1]), form_line[k, -1])) {
+      columns_j_idx <- which(form_line[k, ] == columns[j])
+      if (all(form_line[k, -columns_j_idx] %in% complementary)) {
         columns_form_line[j] <- T
         break
       }
     }
   }
   if (all(columns_form_line)) {
-    good_A <- c(good_A, paste(columns, collapse = " "))
+    good_A_idx <- c(good_A_idx, i)
+  }
+  # complementary design
+  comp_form_line <- rep(F, length(complementary))
+  for (j in 1:length(complementary)) {
+    form_line_lookup_idx <- which(apply(form_line == complementary[j], 1, sum) == 1)
+    for (k in form_line_lookup_idx) {
+      columns_j_idx <- which(form_line[k, ] == complementary[j])
+      if (all(form_line[k, -columns_j_idx] %in% columns)) {
+        comp_form_line[j] <- T
+        break
+      }
+    }
+  }
+  if (all(comp_form_line)) {
+    comp_good_A_idx <- c(comp_good_A_idx, i)
   }
   # if (i %% 1000 == 1) {
-  #  print(paste("completed:", i))
+  #   print(paste("completed:", i))
   # }
 }
 
 # -------------------------------------------------------------------------------------- #
 #                                      saving result                                     #
 # -------------------------------------------------------------------------------------- #
-good_A_idx <- c()
+good_A <- c()
 good_A_num_of_columns <- c()
-for (a in good_A) {
-  good_A_idx <- c(good_A_idx, which(ffd81_columns == a))
-  good_A_num_of_columns <- ffd81$num_of_columns[good_A_idx]
+good_A_wlp <- c()
+for (idx in good_A_idx) {
+  good_A <- c(good_A, ffd81_columns[idx])
+  good_A_num_of_columns <- c(good_A_num_of_columns, ffd81$num_of_columns[idx])
+  good_A_wlp <- c(good_A_wlp, ffd81$wlp[idx])
 }
-result <- data.frame(idx=good_A_idx, num_of_columns=good_A_num_of_columns, columns=good_A)
-write.csv(result, "s81_usable_A.csv", row.names = FALSE)
 
-# -------------------------------------------------------------------------------------- #
-#                                      verification                                      #
-# -------------------------------------------------------------------------------------- #
-idx_to_check_with <- 10
-columns <- as.numeric(unlist(strsplit(good_A[idx_to_check_with], " ")))
-complementary <- setdiff(saturated, columns)
-columns_form_line <- rep(F, length(columns))
-for (j in 1:length(columns)) {
-  form_line_lookup_idx <- which(form_line[, 1] == columns[j])
-  for (k in form_line_lookup_idx) {
-    if (setequal(intersect(complementary, form_line[k, -1]), form_line[k, -1])) {
-      columns_form_line[j] <- T
-      print(paste0("a_j: ", columns[j], ", comp: ", paste(form_line[k, -1], collapse = " ")))
-      break
-    }
-  }
+comp_good_A <- c()
+comp_good_A_num_of_columns <- c()
+comp_good_A_wlp <- c()
+for (idx in comp_good_A_idx) {
+  original <- ffd81_columns[idx]
+  original <- as.numeric(unlist(strsplit(original, " ")))
+  comp <- saturated[-original]
+  comp_good_A_num_of_columns <- c(comp_good_A_num_of_columns, length(comp))
+  comp <- paste(comp, collapse = " ")
+  comp_good_A <- c(comp_good_A, comp)
+  # TODO: find out how to calculate wlp for comp. design
+  comp_good_A_wlp <- c(comp_good_A_wlp, NA)
 }
+
+result <- data.frame(idx=c(good_A_idx, comp_good_A_idx), 
+                     num_of_columns=c(good_A_num_of_columns, comp_good_A_num_of_columns), 
+                     columns=c(good_A, comp_good_A),
+                     wlp=c(good_A_wlp, comp_good_A_wlp))
+library(dplyr)
+result <- result %>% arrange(num_of_columns, idx)
+write.csv(result, "s81_usable_A.csv", row.names = FALSE)
