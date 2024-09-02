@@ -126,6 +126,7 @@ for (idx in good_A_idx) {
   good_A <- c(good_A, ffd81_columns[idx])
   good_A_num_of_columns <- c(good_A_num_of_columns, ffd81$num_of_columns[idx])
   good_A_wlp <- c(good_A_wlp, ffd81$wlp[idx])
+  
 }
 
 comp_good_A <- c()
@@ -138,14 +139,45 @@ for (idx in comp_good_A_idx) {
   comp_good_A_num_of_columns <- c(comp_good_A_num_of_columns, length(comp))
   comp <- paste(comp, collapse = " ")
   comp_good_A <- c(comp_good_A, comp)
-  # TODO: find out how to calculate wlp for comp. design
-  comp_good_A_wlp <- c(comp_good_A_wlp, NA)
+  comp_good_A_wlp <- c(comp_good_A_wlp, ffd81$wlp[idx])
 }
 
 result <- data.frame(idx=c(good_A_idx, comp_good_A_idx), 
                      num_of_columns=c(good_A_num_of_columns, comp_good_A_num_of_columns), 
                      columns=c(good_A, comp_good_A),
-                     wlp=c(good_A_wlp, comp_good_A_wlp))
+                     wlp=c(good_A_wlp, comp_good_A_wlp),
+                     is_comp=c(rep(F, length(good_A)), rep(T, length(comp_good_A))))
 library(dplyr)
 result <- result %>% arrange(num_of_columns, idx)
-write.csv(result, "s81_usable_A.csv", row.names = FALSE)
+# write.csv(result, "s81_good_A.csv", row.names = FALSE)
+
+# ---------------------------------------------------------------------------- #
+#            filtering the ones with least/most words with length  3           #
+# ---------------------------------------------------------------------------- #
+filtered <- data.frame(matrix(nrow = 0, ncol = 5))
+colnames(filtered) <- colnames(df)
+# original designs: filter by the least words with length 3
+for (m in 5:20) {
+  min_wlp <- 10000
+  designs <- df %>% filter(is_comp==F, num_of_columns==m)
+  for (i in 1:nrow(designs)) {
+    wlp <- as.numeric(unlist(strsplit(designs[i, 4], " ")))
+    if (wlp[1] > min_wlp) next
+    if (wlp[1] < min_wlp) min_wlp <- wlp[1]
+    if (wlp[1] == min_wlp) filtered <- rbind(filtered, designs[i, ])
+  }
+}
+# comp. design: filter by the most words with length 3
+for (m in 21:25) {
+  max_wlp <- 0
+  designs <- df %>% 
+    filter(is_comp==T, num_of_columns==m) %>% 
+    arrange(desc(row_number()))
+  for (i in 1:nrow(designs)) {
+    wlp <- as.numeric(unlist(strsplit(designs[i, 4], " ")))
+    if (wlp[1] < max_wlp) next
+    if (wlp[1] > max_wlp) max_wlp <- wlp[1]
+    if (wlp[1] == max_wlp) filtered <- rbind(filtered, designs[i, ])
+  }
+}
+write.csv(filtered, "s81_good_A_filtered.csv", row.names = FALSE)
