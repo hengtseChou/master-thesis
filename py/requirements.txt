@@ -1,6 +1,0 @@
-black
-ipykernel
-isort
-numpy
-pip
-tqdm
