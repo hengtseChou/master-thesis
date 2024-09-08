@@ -155,11 +155,11 @@ result <- result %>% arrange(num_of_columns, idx)
 #            filtering the ones with least/most words with length  3           #
 # ---------------------------------------------------------------------------- #
 filtered <- data.frame(matrix(nrow = 0, ncol = 5))
-colnames(filtered) <- colnames(df)
+colnames(filtered) <- colnames(result)
 # original designs: filter by the least words with length 3
-for (m in 5:20) {
+for (m in 11:20) {
   min_wlp <- 10000
-  designs <- df %>% filter(is_comp==F, num_of_columns==m)
+  designs <- result %>% filter(is_comp==F, num_of_columns==m)
   for (i in 1:nrow(designs)) {
     wlp <- as.numeric(unlist(strsplit(designs[i, 4], " ")))
     if (wlp[1] > min_wlp) next
@@ -170,7 +170,7 @@ for (m in 5:20) {
 # comp. design: filter by the most words with length 3
 for (m in 21:25) {
   max_wlp <- 0
-  designs <- df %>% 
+  designs <- result %>% 
     filter(is_comp==T, num_of_columns==m) %>% 
     arrange(desc(row_number()))
   for (i in 1:nrow(designs)) {
