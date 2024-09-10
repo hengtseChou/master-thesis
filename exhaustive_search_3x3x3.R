@@ -36,7 +36,7 @@ rownames(S81) <- c(1, 2, 3, 4)
 # -------------------------------------------------------------------------------------- #
 #               create a dataframe which shows columns that can form a line              #
 # -------------------------------------------------------------------------------------- #
-is.one <- function(x) { # check whether the first non-zero element of x is one
+first_is_one <- function(x) { # check whether the first non-zero element of x is one
   for (i in 1:length(x)) {
     if (x[i] == 0) next
     if (x[i] == 1) return(T)
@@ -54,8 +54,8 @@ for (i in 1:39){
     tmp[2, ] <- S81[, j]
     tmp[3, ] <- (S81[, i] + S81[, j]) %% 3
     tmp[4, ] <- (S81[, i] + 2 * S81[, j]) %% 3
-    if (!is.one(tmp[3, ])) tmp[3, ] <- (tmp[3, ] * 2) %% 3
-    if (!is.one(tmp[4, ])) tmp[4, ] <- (tmp[4, ] * 2) %% 3
+    if (!first_is_one(tmp[3, ])) tmp[3, ] <- (tmp[3, ] * 2) %% 3
+    if (!first_is_one(tmp[4, ])) tmp[4, ] <- (tmp[4, ] * 2) %% 3
     # form_line_duplicated[k, ] <- tmp %*% 3 ^ (0:3)
     form_line_duplicated[k, ] <- sapply(tmp %*% 3 ^ (0:3), function(x) mapping[[as.character(x)]])
     k <- k + 1
@@ -180,4 +180,4 @@ for (m in 21:25) {
     if (wlp[1] == max_wlp) filtered <- rbind(filtered, designs[i, ])
   }
 }
-write.csv(filtered, "s81_good_A_filtered.csv", row.names = FALSE)
+# write.csv(filtered, "s81_good_A_filtered.csv", row.names = FALSE)
