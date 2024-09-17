@@ -1,17 +1,20 @@
 # -------------------------------------------------------------------------------------- #
 #                     set working directory as current file location                     #
 # -------------------------------------------------------------------------------------- #
+
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # -------------------------------------------------------------------------------------- #
 #                    ffd81: full catalogue of 3 levels, 81 runs design                   #
 # -------------------------------------------------------------------------------------- #
+
 ffd81 <- read.csv("ffd81.csv")
 ffd81_columns <- ffd81$columns
 
 # -------------------------------------------------------------------------------------- #
 #                            S81: saturated design of 81 runs                            #
 # -------------------------------------------------------------------------------------- #
+
 # the format follows Table 6 from "A catalogue of three-level regular fractional factorial designs"
 full <- function(l, n){ # return an l^n full factorial design
   if (n == 1) return(cbind(1:l-1))
@@ -36,13 +39,12 @@ rownames(S81) <- c(1, 2, 3, 4)
 # -------------------------------------------------------------------------------------- #
 #               create a dataframe which shows columns that can form a line              #
 # -------------------------------------------------------------------------------------- #
-first_is_one <- function(x) { # check whether the first non-zero element of x is one
-  for (i in 1:length(x)) {
-    if (x[i] == 0) next
-    if (x[i] == 1) return(T)
-    if (x[i] != 1) return(F)
-  }
+
+first_is_one <- function(x) {
+  first_non_zero <- which(x != 0)[1]
+  return(x[first_non_zero] == 1)
 }
+
 mapping <- 1:40
 names(mapping) <- t(S81) %*% 3^(0:3)
 form_line_duplicated <- matrix(0, choose(40, 2), 4)
@@ -70,9 +72,9 @@ for (i in 2:nrow(form_line_duplicated)) {
   if (!IN) form_line <- rbind(form_line, form_line_duplicated[i, ])
 }
 
-# ---------------------------------------------------------------------------- #
-#                      load in good A and find possible B                      #
-# ---------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------- #
+#                           load in good A and find possible B                           #
+# -------------------------------------------------------------------------------------- #
 
 good_A <- read.csv("s81_good_A_filtered.csv")
 m11_columns <- good_A[1, ]$columns
@@ -94,38 +96,30 @@ for (a in m11_columns) {
   corresponding_b[[as.character(a)]] <- unique(b)
 }
 
-# ---------------------------------------------------------------------------- #
-#                  create a loop for iterating all possible B                  #
-# ---------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------- #
+#                       create a loop for iterating all possible B                       #
+# -------------------------------------------------------------------------------------- #
 
 powers_of_3 <- 3^(0:3)
-mapping_names <- names(mapping)
 
 adding_factors <- function(a, b) {
   col_a <- S81[, a]
   col_b <- S81[, b]
-  add_up <- col_a + col_b
-  if (!first_is_one(add_up)) {
-    add_up <- (add_up * 2) %% 3
-  }
-  result_value <- as.numeric(add_up %*% powers_of_3)
-  return(unname(mapping[which(mapping_names == result_value)]))
+  add_up <- (col_a + col_b) %% 3
+  if (!first_is_one(add_up)) add_up <- (add_up * 2) %% 3
+  value_index <- as.character(add_up %*% powers_of_3)
+  return(unname(mapping[value_index]))
 }
 
 is_condition_satisifed <- function(ai, aj, bi, bj) {
   bi_square <- adding_factors(bi, bi)
   bj_square <- adding_factors(bj, bj)
-  
   ai_bi <- adding_factors(ai, bi)
   ai_bi_square <- adding_factors(ai, bi_square)
-  
   aj_bj <- adding_factors(aj, bj)
   aj_bj_square <- adding_factors(aj, bj_square)
-  
-  if (anyDuplicated(c(bi, bj, ai_bi, ai_bi_square, aj_bj, aj_bj_square))) {
-    return(FALSE)
-  }
-  return(TRUE)
+  if (anyDuplicated(c(bi, bj, ai_bi, ai_bi_square, aj_bj, aj_bj_square))) return(F)
+  return(T)
 }
 
 m <- length(m11_columns)
@@ -138,8 +132,7 @@ best_b_good_pairs <- 0
 current_b <- rep(0, m)
 
 width <- getOption("width") + 3
-padding1 <- strrep(" ", width - 48)
-padding2 <- strrep(" ", width - 44)
+padding <- strrep(" ", width - 46)
 
 while (!all(max_positions == curr_position)) {
   for (i in 1:m) {
@@ -167,7 +160,7 @@ while (!all(max_positions == curr_position)) {
     curr_position[cursor] <- curr_position[cursor] + 1
   }
   # locate duplication and move that position
-  while(anyDuplicated(current_b)) {
+  while (anyDuplicated(current_b)) {
     idx <- head(which(duplicated(current_b, fromLast = T)), 1)
     if (curr_position[idx] + 1 <= max_positions[idx]) {
       curr_position[idx] <- curr_position[idx] + 1
@@ -188,5 +181,5 @@ while (!all(max_positions == curr_position)) {
   curr_position_str <- paste0("curr_position: ", paste(sprintf("%-3s", unname(curr_position)), collapse = ""))
   current_b_str <- paste0("current_b:     ", paste(sprintf("%-3s", unname(current_b)), collapse = ""))
   best_b_str <- paste0("best_b:        ", paste(sprintf("%-3s", unname(best_b)), collapse = ""))
-  cat("\r", curr_position_str, padding1, current_b_str, padding2, best_b_str, sep = "")
+  cat("\r", curr_position_str, padding, current_b_str, padding, best_b_str, sep = "")
 }
