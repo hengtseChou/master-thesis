@@ -45,41 +45,62 @@ math: mathjax
 
 # Weekly Meeting
 
-Topic: Algorithm for $3\times3\times3$ and $9\times9$
+Topic: Exhausive search for $9\times9$ ($m=11$)
 
 <br>
 
 Presenter: Heng-Tse Chou @ NTHU STAT
 
-Date: Sept. 11, 2024
-
----
-
-# Result for finding $3\times3\times3$
-
-![h:450](screenshot1.png)
+Date: Sept. 18, 2024
 
 ---
 
 # Property for finding $9\times9$
 
-If $D = (d_1, \dots, d_m)$ is constructed via $D=A+B/2+3/2$, and $D$ is $\text{SOA}(2+)$, then for all $i\neq j$, the following statements are equivalent:
+If $D= (d_1, \dots, d_m)$ is constructed via $D = sA+B$ ,and $D$ is $\text{SOA}(2+)$.
 
-- $(d_i, d_j)$ achieve stratification over $s^2\times s^2$ grids.
-- $(a_i, a_j, b_i, b_j)$ is $\text{OA}(n, 4, s, 4)$.
-- $a_ib_i$, $a_jb_j$, $b_i$ and $b_j$ are different factors chosen from the saturated design $S$.
+For the case where $s=3$, these statements are equivalent, given $i \neq j$, $i<j$:
 
----
-
-# An idea for $9\times9$
-
-1. Fix $a_i$, find all possible $b_i$ that could form a line with $a_i$.
-2. Make many design $B$ without duplicated factors.
-3. For each $B$, calculate how many pair $(i, j)$ satisfies $(a_ib_i, a_jb_j, b_i, b_j)$ being different factors.
-4. Select $B$ with the most pairs satisfying the condition.
+1. $(d_i, d_j)$ achieve stratification over $s^2\times s^2$ grids.
+2. $(a_i, b_i, a_j, b_j)$ is $\text{OA}(n, 4, 3, 4)$.
+3. $(b_i, b_j, a_ib_i, a_ib_i^2, a_jb_j, a_jb_j^2)$ are different factors from $S$.
 
 ---
 
-# But...
+# Why (3) ?
 
-![h:450](screenshot2.png)
+$\begin{aligned} 
+a_i \times b_i \times b_j \neq I &\rightarrow a_i \times b_i \times b_j \neq I \rightarrow b_j \neq a_ib_i \\
+&\rightarrow a_i \times b_i \times b_j^2  \neq I\rightarrow b_j^2 \neq a_ib_i \rightarrow b_j \neq a_ib_i\\
+&\rightarrow a_i \times b_i^2 \times b_j \neq I\rightarrow b_j \neq a_i b_i^2 \\
+&\rightarrow a_i \times b_i^2 \times b_j^2 \neq I\rightarrow b_j^2 \neq a_i b_i^2 \rightarrow b_j \neq a_i b_i^2
+\end{aligned}$
+
+$\begin{aligned} 
+a_j \times b_i \times b_j \neq I &\rightarrow a_j \times b_i \times b_j \neq I \rightarrow b_i \neq a_jb_j \\
+&\rightarrow a_j \times b_i \times b_j^2  \neq I\rightarrow b_i \neq a_jb_j^2 \\
+&\rightarrow a_j \times b_i^2 \times b_j \neq I\rightarrow b_i^2 \neq a_j b_j \rightarrow b_i \neq a_jb_j\\
+&\rightarrow a_j \times b_i^2 \times b_j^2 \neq I\rightarrow b_i^2 \neq a_j b_j^2  \rightarrow b_i \neq a_jb_j^2
+\end{aligned}$
+
+$\begin{aligned}
+b_i \times b_j \neq I &\rightarrow b_i\times b_j \neq I \rightarrow b_i \neq b_j\\
+&\rightarrow b_i \times b_j^2 \neq I \rightarrow b_i \neq b_j^2  = b_j
+\end{aligned}$
+
+---
+
+# Why (3) ?
+
+$a_i \times b_i \times a_j \times b_j \neq I$
+
+$\begin{aligned} 
+&\rightarrow a_i \times a_j \times b_i \times b_j \neq I \rightarrow a_ib_i \neq a_jb_j \\
+&\rightarrow a_i \times a_j\times b_i \times b_j^2 \neq I \rightarrow a_ib_i \neq a_j b_j^2 \\
+&\rightarrow a_i \times a_j\times b_i^2 \times b_j \neq I  \rightarrow a_ib_i^2 \neq a_j b_j \\
+&\rightarrow a_i \times a_j\times b_i^2 \times b_j^2 \neq I \rightarrow a_ib_i^2 \neq a_j b_j^2 \\
+&\rightarrow a_i \times a_j^2\times b_i \times b_j \neq I \rightarrow a_ib_i \neq a_j^2 b_j  \rightarrow a_i b_i \neq a_j b_j^2\\
+&\rightarrow a_i\times a_j^2 \times b_i \times b_j^2 \neq I \rightarrow a_ib_i \neq a_j^2 b_j^2 \rightarrow a_i b_i \neq a_j b_j \\
+&\rightarrow a_i \times a_j^2\times b_i^2 \times b_j \neq I \rightarrow a_ib_i^2 \neq a_j^2 b_j \rightarrow a_i b_i^2 \neq a_j b_j ^ 2\\
+&\rightarrow a_i \times a_j^2\times b_i^2 \times b_j^2 \neq I \rightarrow a_ib_i^2 \neq a_j^2 b_j^2 \rightarrow a_i b_i ^ 2 \neq a_j b_j
+\end{aligned}$
