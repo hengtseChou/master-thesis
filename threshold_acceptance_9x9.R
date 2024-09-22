@@ -5,13 +5,6 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # -------------------------------------------------------------------------------------- #
-#                    ffd81: full catalogue of 3 levels, 81 runs design                   #
-# -------------------------------------------------------------------------------------- #
-
-ffd81 <- read.csv("ffd81.csv")
-ffd81_columns <- ffd81$columns
-
-# -------------------------------------------------------------------------------------- #
 #                            S81: saturated design of 81 runs                            #
 # -------------------------------------------------------------------------------------- #
 
@@ -197,3 +190,30 @@ for (i in 1:n.iter) {
 }
 ts.plot(track)
 count_good_pairs(best_D)
+
+# -------------------------------------------------------------------------------------- #
+#                                   new check functions                                  #
+# -------------------------------------------------------------------------------------- #
+
+s22.new <- function(d,s){
+  l <- nrow(d)/s^4
+  C2 <- combn(ncol(d),2)
+  yes <- rep(1,ncol(C2))
+  for (i in 1:ncol(C2)) {
+    tmp <- d[, C2[, i]]
+    tmp <- tmp[which(tmp[, 1] == 0), ]
+    if (sum(tmp[, 2] == 0) != l) yes[i] <- 0
+  }
+  yes
+}
+
+s22.new2 <- function(d,s){
+  l <- nrow(d)/s^4
+  C2 <- combn(ncol(d), 2)
+  yes <- rep(1, ncol(C2))
+  for (i in 1:ncol(C2)) {
+    tmp <- d[ ,C2[ ,i]]
+    if (sum(tmp %*% c(1,1) == 0) != l) yes[i] <- 0
+  }
+  yes
+}

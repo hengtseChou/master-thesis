@@ -4,10 +4,10 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # -------------------------------------------------------------------------------------- #
-#                    ffd81: full catalogue of 3 levels, 81 runs design                   #
+#                    s81_catalogue: full catalogue of 3 levels, 81 runs design                   #
 # -------------------------------------------------------------------------------------- #
-ffd81 <- read.csv("ffd81.csv")
-ffd81_columns <- ffd81$columns
+s81_catalogue <- read.csv("s81_catalogue.csv")
+s81_columns <- s81_catalogue$columns
 
 # -------------------------------------------------------------------------------------- #
 #                            S81: saturated design of 81 runs                            #
@@ -72,14 +72,14 @@ for (i in 2:nrow(form_line_duplicated)) {
 # write.csv(as.data.frame(form_line), "s81_line.csv", row.names = FALSE)
 
 # -------------------------------------------------------------------------------------- #
-#                     use ffd81 and form_line to do exhausive search                     #
+#                     use s81_catalogue and form_line to do exhausive search                     #
 # -------------------------------------------------------------------------------------- #
 # find design A that satisfies thm3 from "STRONG ORTHOGONAL ARRAYS OF STRENGTH TWO PLUS"
 saturated <- 1:40
 good_A_idx <- c()
 comp_good_A_idx <- c()
-for (i in 1:length(ffd81_columns)) {
-  columns <- as.numeric(unlist(strsplit(ffd81_columns[i], " ")))
+for (i in 1:length(s81_columns)) {
+  columns <- as.numeric(unlist(strsplit(s81_columns[i], " ")))
   complementary <- saturated[-columns]
   columns_form_line <- rep(F, length(columns))
   # original design
@@ -123,9 +123,9 @@ good_A <- c()
 good_A_num_of_columns <- c()
 good_A_wlp <- c()
 for (idx in good_A_idx) {
-  good_A <- c(good_A, ffd81_columns[idx])
-  good_A_num_of_columns <- c(good_A_num_of_columns, ffd81$num_of_columns[idx])
-  good_A_wlp <- c(good_A_wlp, ffd81$wlp[idx])
+  good_A <- c(good_A, s81_columns[idx])
+  good_A_num_of_columns <- c(good_A_num_of_columns, s81_catalogue$num_of_columns[idx])
+  good_A_wlp <- c(good_A_wlp, s81_catalogue$wlp[idx])
   
 }
 
@@ -133,13 +133,13 @@ comp_good_A <- c()
 comp_good_A_num_of_columns <- c()
 comp_good_A_wlp <- c()
 for (idx in comp_good_A_idx) {
-  original <- ffd81_columns[idx]
+  original <- s81_columns[idx]
   original <- as.numeric(unlist(strsplit(original, " ")))
   comp <- saturated[-original]
   comp_good_A_num_of_columns <- c(comp_good_A_num_of_columns, length(comp))
   comp <- paste(comp, collapse = " ")
   comp_good_A <- c(comp_good_A, comp)
-  comp_good_A_wlp <- c(comp_good_A_wlp, ffd81$wlp[idx])
+  comp_good_A_wlp <- c(comp_good_A_wlp, s81_catalogue$wlp[idx])
 }
 
 result <- data.frame(idx=c(good_A_idx, comp_good_A_idx), 
