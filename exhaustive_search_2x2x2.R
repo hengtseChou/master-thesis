@@ -13,15 +13,25 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 catalogue <- read.csv("s16_catalogue.csv")
 
-indep_cols <- read.csv("s16_full_factorial.csv")
-generator <- read.csv("s16_generator.csv")
-
+indep_cols <- read.csv("s16_full_factorial.csv") |>
+  as.matrix()
+generator <- read.csv("s16_generator.csv") |>
+  as.matrix()
 lines <- read.csv("s16_lines.csv") |>
   as.matrix()
 
 # -------------------------------------------------------------------------------------- #
 #                                    exhaustive search                                   #
 # -------------------------------------------------------------------------------------- #
+
+str_to_vec <- function(s) {
+  return(as.numeric(unlist(strsplit(s, " "))))
+}
+
+vec_to_str <- function(v) {
+  if (is.null(v)) return(NA)
+  return(paste(v, collapse = " "))
+}
 
 is_good_A <- function(a_columns) {
   idx <- which((matrix(lines %in% a_columns, nrow(lines)) %*% rep(1,3)) == 1)
@@ -33,7 +43,7 @@ saturated <- 1:15
 good_A_idx <- c()
 comp_good_A_idx <- c()
 for (i in 1:length(catalogue$columns)) {
-  a_columns <- as.numeric(unlist(strsplit(catalogue$columns[i], " ")))
+  a_columns <- str_to_vec(catalogue$columns[i])
   complementary <- saturated[-a_columns]
   # original design
   if (is_good_A(a_columns)) {
@@ -63,12 +73,10 @@ comp_good_A <- c()
 comp_good_A_num_of_columns <- c()
 comp_good_A_wlp <- c()
 for (idx in comp_good_A_idx) {
-  original <- catalogue$columns[idx]
-  original <- as.numeric(unlist(strsplit(original, " ")))
+  original <- str_to_vec(catalogue$columns[idx])
   comp <- saturated[-original]
   comp_good_A_num_of_columns <- c(comp_good_A_num_of_columns, length(comp))
-  comp <- paste(comp, collapse = " ")
-  comp_good_A <- c(comp_good_A, comp)
+  comp_good_A <- c(comp_good_A, vec_to_str(comp))
   comp_good_A_wlp <- c(comp_good_A_wlp, str_sub(catalogue$wlp[idx], 5))
 }
 
@@ -86,33 +94,114 @@ result <- result %>% arrange(num_of_columns, idx)
 # -------------------------------------------------------------------------------------- #
 
 filtered <- data.frame(matrix(nrow = 0, ncol = 5))
-colnames(filtered) <- colnames(result)
 # original designs: filter by the least words with length 3
-for (m in 4:7) {
+range1 <- result %>% 
+  filter(is_comp == F) %>% 
+  select(num_of_columns) %>% 
+  range
+for (m in seq(range1[1], range1[2])) {
   min_wlp <- 10000
-  a_columns <- result %>% filter(is_comp == F, num_of_columns == m)
-  for (i in 1:nrow(a_columns)) {
-    wlp <- as.numeric(unlist(strsplit(a_columns[i, 4], " ")))
+  entries <- result %>% filter(is_comp == F, num_of_columns == m)
+  for (i in 1:nrow(entries)) {
+    wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] > min_wlp) next
     if (wlp[1] < min_wlp) min_wlp <- wlp[1]
-    if (wlp[1] == min_wlp) filtered <- rbind(filtered, a_columns[i, ])
+    if (wlp[1] == min_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
 # comp. design: filter by the most words with length 3
-for (m in 8:10) {
+range2 <- result %>% 
+  filter(is_comp == T) %>% 
+  select(num_of_columns) %>% 
+  range
+for (m in seq(range2[1], range2[2])) {
   max_wlp <- 0
-  a_columns <- result %>% 
+  entries <- result %>% 
     filter(is_comp == T, num_of_columns == m) %>% 
     arrange(desc(row_number()))
-  for (i in 1:nrow(a_columns)) {
-    wlp <- as.numeric(unlist(strsplit(a_columns[i, 4], " ")))
+  for (i in 1:nrow(entries)) {
+    wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] < max_wlp) next
     if (wlp[1] > max_wlp) max_wlp <- wlp[1]
-    if (wlp[1] == max_wlp) filtered <- rbind(filtered, a_columns[i, ])
+    if (wlp[1] == max_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
 # write.csv(filtered, "s16_good_A_filtered.csv", row.names = FALSE)
 
+# -------------------------------------------------------------------------------------- #
+#                  for each filtered A, find B that maximize s22 counts                  #
+# -------------------------------------------------------------------------------------- #
 
+get_B.set <- function(a_columns) {
+  possible_b <- list()
+  for (i in 1:length(a_columns)) {
+    idx <- which((lines == a_columns[i]) %*% rep(1, 3) == 1)
+    nums_of_col_in_a <- matrix(lines[idx, ] %in% a_columns, length(idx)) %*% rep(1, 3)
+    exactly_one <- (lines[idx, ])[which(nums_of_col_in_a == 1), ]
+    possible_b[[i]] <- setdiff(unique(as.vector(exactly_one)), a_columns[i])
+  }
+  return(possible_b)
+}
+
+s22.new2 <- function(d,s){
+  l <- nrow(d)/s^4
+  C2 <- combn(ncol(d), 2)
+  yes <- rep(1, ncol(C2))
+  for (i in 1:ncol(C2)) {
+    tmp <- d[ ,C2[ ,i]]
+    if (sum(tmp %*% c(1,1) == 0) != l) yes[i] <- 0
+  }
+  yes
+}
+
+count_good_pairs <- function(d) {
+  return(sum(s22.new2(d, 3)))
+}
+
+good_B <- c()
+s22_max <- c()
+
+for (i in 1:nrow(filtered)) {
+  a_columns <- str_to_vec(filtered$columns[i])
+  A <- (indep_cols %*% generator[, a_columns]) %% 2
+  B.set <- get_B.set(a_columns)
+  
+  m <- length(B.set)
+  
+  max_positions <- lapply(B.set, length) |> unlist()
+  curr_position <- rep(1, m)
+  
+  b_columns <- rep(1, m)
+  best_b_columns <- c()
+  max_count <- 0
+  
+  while (TRUE) {
+    # do things 
+    for (j in 1:m) {
+      b_columns[j] <- B.set[[j]][curr_position[j]]
+    }
+    B <- (indep_cols %*% generator[, b_columns]) %% 2
+    D <- 2 * A + B
+    count <- count_good_pairs(D)
+    if (count > max_count) {
+      best_b_columns <- b_columns
+      max_count <- count
+    }
+    # break if reached the last B candidate 
+    if (all(max_positions == curr_position)) break
+    # move to the next design
+    cursor <- 1
+    while (curr_position[cursor] + 1 > max_positions[cursor]) {
+      curr_position[cursor] <- 1
+      cursor <- cursor + 1
+    }
+    curr_position[cursor] <- curr_position[cursor] + 1
+  }
+  good_B[i] <- vec_to_str(best_b_columns)
+  s22_max[i] <- max_count
+}
+
+B_result <- data.frame(columns=good_B, s22_max=s22_max)
+write.csv(B_result, "s16_good_B.csv", row.names = F)
 
 
