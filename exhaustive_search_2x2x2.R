@@ -80,28 +80,28 @@ for (idx in comp_good_A_idx) {
   comp_good_A_wlp <- c(comp_good_A_wlp, str_sub(catalogue$wlp[idx], 5))
 }
 
-result <- data.frame(idx=c(good_A_idx, comp_good_A_idx), 
+all_good_A <- data.frame(idx=c(good_A_idx, comp_good_A_idx), 
                      num_of_columns=c(good_A_num_of_columns, comp_good_A_num_of_columns), 
                      columns=c(good_A, comp_good_A),
                      wlp=c(good_A_wlp, comp_good_A_wlp),
                      is_comp=c(rep(F, length(good_A)), rep(T, length(comp_good_A))))
 library(dplyr)
-result <- result %>% arrange(num_of_columns, idx)
-# write.csv(result, "s16_good_A.csv", row.names = FALSE)
+all_good_A <- all_good_A %>% arrange(num_of_columns, idx)
+write.csv(all_good_A, "s16_good_A.csv", row.names = FALSE)
 
 # -------------------------------------------------------------------------------------- #
-#                 filtering the ones with least/most words with length  3                #
+#               filter current result with least/most words with length  3               #
 # -------------------------------------------------------------------------------------- #
 
 filtered <- data.frame(matrix(nrow = 0, ncol = 5))
 # original designs: filter by the least words with length 3
-range1 <- result %>% 
+range1 <- all_good_A %>% 
   filter(is_comp == F) %>% 
   select(num_of_columns) %>% 
   range
 for (m in seq(range1[1], range1[2])) {
   min_wlp <- 10000
-  entries <- result %>% filter(is_comp == F, num_of_columns == m)
+  entries <- all_good_A %>% filter(is_comp == F, num_of_columns == m)
   for (i in 1:nrow(entries)) {
     wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] > min_wlp) next
@@ -110,13 +110,13 @@ for (m in seq(range1[1], range1[2])) {
   }
 }
 # comp. design: filter by the most words with length 3
-range2 <- result %>% 
+range2 <- all_good_A %>% 
   filter(is_comp == T) %>% 
   select(num_of_columns) %>% 
   range
 for (m in seq(range2[1], range2[2])) {
   max_wlp <- 0
-  entries <- result %>% 
+  entries <- all_good_A %>% 
     filter(is_comp == T, num_of_columns == m) %>% 
     arrange(desc(row_number()))
   for (i in 1:nrow(entries)) {
@@ -126,7 +126,6 @@ for (m in seq(range2[1], range2[2])) {
     if (wlp[1] == max_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
-# write.csv(filtered, "s16_good_A_filtered.csv", row.names = FALSE)
 
 # -------------------------------------------------------------------------------------- #
 #                  for each filtered A, find B that maximize s22 counts                  #
@@ -155,19 +154,19 @@ s22.new2 <- function(d,s){
 }
 
 count_good_pairs <- function(d) {
-  return(sum(s22.new2(d, 3)))
+  return(sum(s22.new2(d, 2)))
 }
 
 good_B <- c()
 s22_max <- c()
 
-for (i in 1:nrow(filtered)) {
-  a_columns <- str_to_vec(filtered$columns[i])
+for (k in 1:nrow(filtered)) {
+  a_columns <- str_to_vec(filtered$columns[k])
   A <- (indep_cols %*% generator[, a_columns]) %% 2
   B.set <- get_B.set(a_columns)
   
   m <- length(B.set)
-  
+
   max_positions <- lapply(B.set, length) |> unlist()
   curr_position <- rep(1, m)
   
@@ -187,7 +186,6 @@ for (i in 1:nrow(filtered)) {
       best_b_columns <- b_columns
       max_count <- count
     }
-    # break if reached the last B candidate 
     if (all(max_positions == curr_position)) break
     # move to the next design
     cursor <- 1
@@ -197,11 +195,13 @@ for (i in 1:nrow(filtered)) {
     }
     curr_position[cursor] <- curr_position[cursor] + 1
   }
-  good_B[i] <- vec_to_str(best_b_columns)
-  s22_max[i] <- max_count
+  
+  good_B[k] <- vec_to_str(best_b_columns)
+  s22_max[k] <- max_count
 }
 
-B_result <- data.frame(columns=good_B, s22_max=s22_max)
-write.csv(B_result, "s16_good_B.csv", row.names = F)
+result <- data.frame(b_columns=good_B, s22_max=s22_max)
+result <- cbind(filtered, result)
+write.csv(result, "s16_case1.csv", row.names = F)
 
 
