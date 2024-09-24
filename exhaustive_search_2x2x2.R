@@ -106,6 +106,9 @@ for (m in seq(range1[1], range1[2])) {
     wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] > min_wlp) next
     if (wlp[1] < min_wlp) min_wlp <- wlp[1]
+  }
+  for (i in 1:nrow(entries)) {
+    wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] == min_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
@@ -123,6 +126,9 @@ for (m in seq(range2[1], range2[2])) {
     wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] < max_wlp) next
     if (wlp[1] > max_wlp) max_wlp <- wlp[1]
+  }
+  for (i in 1:nrow(entries)) {
+    wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] == max_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
