@@ -4,7 +4,7 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # -------------------------------------------------------------------------------------- #
-#                    s81_catalogue: full catalogue of 3 levels, 81 runs design                   #
+#                    s81_catalogue: full catalogue of 3 levels, 81 runs design           #
 # -------------------------------------------------------------------------------------- #
 s81_catalogue <- read.csv("s81_catalogue.csv")
 s81_columns <- s81_catalogue$columns
@@ -72,7 +72,7 @@ for (i in 2:nrow(form_line_duplicated)) {
 # write.csv(as.data.frame(form_line), "s81_line.csv", row.names = FALSE)
 
 # -------------------------------------------------------------------------------------- #
-#                     use s81_catalogue and form_line to do exhausive search                     #
+#                     use s81_catalogue and form_line to do exhausive search             #
 # -------------------------------------------------------------------------------------- #
 # find design A that satisfies thm3 from "STRONG ORTHOGONAL ARRAYS OF STRENGTH TWO PLUS"
 saturated <- 1:40
@@ -151,9 +151,10 @@ library(dplyr)
 result <- result %>% arrange(num_of_columns, idx)
 # write.csv(result, "s81_good_A.csv", row.names = FALSE)
 
-# ---------------------------------------------------------------------------- #
-#            filtering the ones with least/most words with length  3           #
-# ---------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------- #
+#                 filtering the ones with least/most words with length  3                #
+# -------------------------------------------------------------------------------------- #
+
 filtered <- data.frame(matrix(nrow = 0, ncol = 5))
 colnames(filtered) <- colnames(result)
 # original designs: filter by the least words with length 3

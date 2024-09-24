@@ -163,7 +163,7 @@ count_good_pairs(D)
 #                                         wrap up                                        #
 # -------------------------------------------------------------------------------------- #
 
-# use greedy to directly generate D = 3A + B from given A
+# use greedy to directly generate D = 3A + B from given A columns
 greedy <- function(a_columns, iter) {
   A <- form_design_from_columns(a_columns)
   b.set <- get_B.set(a_columns)
