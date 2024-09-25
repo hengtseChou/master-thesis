@@ -6,14 +6,14 @@
 # -------------------------------------------------------------------------------------- #
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-catalogue <- read.csv("s16_catalogue.csv")
-good_A <- read.csv("s16_good_A.csv")
+catalogue <- read.csv("s16/s16_catalogue.csv")
+good_A <- read.csv("s16/s16_good_A.csv")
 
-indep_cols <- read.csv("s16_full_factorial.csv") |>
+indep_cols <- read.csv("s16/s16_indep.csv") |>
   as.matrix()
-generator <- read.csv("s16_generator.csv") |>
+generator <- read.csv("s16/s16_generator.csv") |>
   as.matrix()
-lines <- read.csv("s16_lines.csv") |>
+lines <- read.csv("s16/s16_lines.csv") |>
   as.matrix()
 
 # -------------------------------------------------------------------------------------- #
@@ -102,6 +102,11 @@ result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(good_A, result)
 colnames(result)[3] <- "a_columns"
 
+# filter the ones with max s22 count first
+result_s22_max <- result %>%
+  group_by(num_of_columns) %>%
+  filter(s22_max == max(s22_max, na.rm=TRUE))
+
 # -------------------------------------------------------------------------------------- #
 #               filter current result with least/most words with length  3               #
 # -------------------------------------------------------------------------------------- #
@@ -145,4 +150,4 @@ for (m in seq(range2[1], range2[2])) {
     if (wlp[1] == max_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
-write.csv(filtered, "s16_case2.csv", row.names = F)
+write.csv(filtered, "s16/s16_case2.csv", row.names = F)

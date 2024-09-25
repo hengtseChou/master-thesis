@@ -11,13 +11,13 @@
 # -------------------------------------------------------------------------------------- #
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-catalogue <- read.csv("s16_catalogue.csv")
+catalogue <- read.csv("s32/s32_catalogue.csv")
 
-indep_cols <- read.csv("s16_full_factorial.csv") |>
+indep_cols <- read.csv("s32/s32_indep.csv") |>
   as.matrix()
-generator <- read.csv("s16_generator.csv") |>
+generator <- read.csv("s32/s32_generator.csv") |>
   as.matrix()
-lines <- read.csv("s16_lines.csv") |>
+lines <- read.csv("s32/s32_lines.csv") |>
   as.matrix()
 
 # -------------------------------------------------------------------------------------- #
@@ -39,7 +39,7 @@ is_good_A <- function(a_columns) {
 }
 
 # formula for num of effects = (s^k - 1)/(s-1)
-saturated <- 1:15
+saturated <- 1:31
 good_A_idx <- c()
 comp_good_A_idx <- c()
 for (i in 1:length(catalogue$columns)) {
@@ -87,7 +87,7 @@ all_good_A <- data.frame(idx=c(good_A_idx, comp_good_A_idx),
                      is_comp=c(rep(F, length(good_A)), rep(T, length(comp_good_A))))
 library(dplyr)
 all_good_A <- all_good_A %>% arrange(num_of_columns, idx)
-write.csv(all_good_A, "s16_good_A.csv", row.names = FALSE)
+write.csv(all_good_A, "s32/s32_good_A.csv", row.names = FALSE)
 
 # -------------------------------------------------------------------------------------- #
 #               filter current result with least/most words with length  3               #
@@ -204,10 +204,11 @@ for (k in 1:nrow(filtered)) {
   
   good_B[k] <- vec_to_str(best_b_columns)
   s22_max[k] <- max_count
+  print(paste("No.", k, "done."))
 }
 
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(filtered, result)
-write.csv(result, "s16_case1.csv", row.names = F)
+# write.csv(result, "s16/s16_case1.csv", row.names = F)
 
 
