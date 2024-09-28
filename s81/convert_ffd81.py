@@ -2,7 +2,7 @@ import csv
 import re
 
 input_file = 'ffd81.txt'
-output_file = 'ffd81.csv'
+output_file = 's81_catalogue.csv'
 
 pattern = re.compile(r'(\d+)(?:-\d+)?\.\d+\*?\s+\\COL\{([\d\s]+)\}.*?\\WLP\{([\d\s]*)\}')
 
