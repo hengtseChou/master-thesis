@@ -147,12 +147,14 @@ for (k in 1:nrow(filtered)) {
   
   good_B[k] <- vec_to_str(b_columns)
   s22_max[k] <- count_pairs(D, 2)
-  if (k %% 20 == 0) cat(paste("No.", k, "done.\n"))
-  if (k == nrow(filtered)) cat(paste("No.", k, "done.\nAll completed."))
+  if (k %% 20 == 0) cat("No. ", k, " done.\n")
+  if (k == nrow(filtered)) cat("No .", k, " done.\nAll completed.\n")
 }
 
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(filtered, result)
+result <- result %>%
+  filter(num_of_columns >= 10)
 write.csv(result, "s32_case1.csv", row.names = F)
 
 # -------------------------------------------------------------------------------------- #
@@ -174,8 +176,8 @@ for (k in 1:nrow(good_A)) {
   
   good_B[k] <- vec_to_str(b_columns)
   s22_max[k] <- count_pairs(D, 2)
-  if (k %% 20 == 0) cat(paste("No.", k, "done.\n"))
-  if (k == nrow(good_A)) cat(paste("No.", k, "done.\nAll completed."))
+  if (k %% 20 == 0) cat("No. ", k, " done.\n")
+  if (k == nrow(good_A)) cat("No. ", k, " done.\nAll completed.\n")
 }
 
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
@@ -184,7 +186,7 @@ colnames(result)[3] <- "a_columns"
 
 result <- result %>%
   group_by(num_of_columns) %>%
-  mutate(subgroup_idx = row_number()) %>%
+  mutate(subgroup_idx = row_number(), subgroup_size = n()) %>%
   ungroup()
 result_s22_max <- result %>%
   group_by(num_of_columns) %>%
@@ -230,4 +232,6 @@ for (m in seq(range2[1], range2[2])) {
     if (wlp[1] == max_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
+filtered <- filtered %>%
+  filter(num_of_columns >= 10)
 write.csv(filtered, "s32_case2.csv", row.names = F)

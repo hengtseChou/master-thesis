@@ -147,11 +147,13 @@ for (k in 1:nrow(filtered)) {
   
   good_B[k] <- vec_to_str(best_b_columns)
   s22_max[k] <- max_count
-  # print(paste("No.", k, "done."))
+  cat(paste("No.", k, "done.\n"))
 }
 
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(filtered, result)
+result <- result %>%
+  filter(num_of_columns >= 6)
 write.csv(result, "s16_case1.csv", row.names = F)
 
 # -------------------------------------------------------------------------------------- #
@@ -165,7 +167,7 @@ s22_max <- c()
 for (i in 1:nrow(good_A)) {
   a_columns <- str_to_vec(good_A$columns[i])
   A <- (indep_cols %*% generator[, a_columns]) %% 2
-  b_set <- get_B.set(a_columns)
+  b_set <- get_b_set(a_columns, 2)
   
   m <- length(b_set)
   
@@ -199,7 +201,7 @@ for (i in 1:nrow(good_A)) {
   }
   good_B[i] <- vec_to_str(best_b_columns)
   s22_max[i] <- max_count
-  # print(paste("No.", i, "done."))
+  cat(paste("No.", i, "done.\n"))
 }
 
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
@@ -209,7 +211,7 @@ colnames(result)[3] <- "a_columns"
 library(dplyr)
 result <- result %>%
   group_by(num_of_columns) %>%
-  mutate(subgroup_idx = row_number()) %>%
+  mutate(subgroup_idx = row_number(), subgroup_size = n()) %>%
   ungroup()
 result_s22_max <- result %>%
   group_by(num_of_columns) %>%
@@ -255,4 +257,6 @@ for (m in seq(range2[1], range2[2])) {
     if (wlp[1] == max_wlp) filtered <- rbind(filtered, entries[i, ])
   }
 }
+filtered <- filtered %>%
+  filter(num_of_columns >= 6)
 write.csv(filtered, "s16_case2.csv", row.names = F)
