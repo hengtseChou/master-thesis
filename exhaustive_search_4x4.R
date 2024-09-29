@@ -102,7 +102,8 @@ result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(good_A, result)
 colnames(result)[3] <- "a_columns"
 
-# filter the ones with max s22 count first
+library(dplyr)
+
 result_s22_max <- result %>%
   group_by(num_of_columns) %>%
   filter(s22_max == max(s22_max, na.rm=TRUE))
@@ -113,13 +114,13 @@ result_s22_max <- result %>%
 
 filtered <- data.frame(matrix(nrow = 0, ncol = 7))
 # original designs: filter by the least words with length 3
-range1 <- result %>% 
+range1 <- result_s22_max %>% 
   filter(is_comp == F) %>% 
   select(num_of_columns) %>% 
   range
 for (m in seq(range1[1], range1[2])) {
   min_wlp <- 10000
-  entries <- result %>% filter(is_comp == F, num_of_columns == m)
+  entries <- result_s22_max %>% filter(is_comp == F, num_of_columns == m)
   for (i in 1:nrow(entries)) {
     wlp <- str_to_vec(entries$wlp[i])
     if (wlp[1] > min_wlp) next
@@ -131,13 +132,13 @@ for (m in seq(range1[1], range1[2])) {
   }
 }
 # comp. design: filter by the most words with length 3
-range2 <- result %>% 
+range2 <- result_s22_max %>% 
   filter(is_comp == T) %>% 
   select(num_of_columns) %>% 
   range
 for (m in seq(range2[1], range2[2])) {
   max_wlp <- 0
-  entries <- result %>% 
+  entries <- result_s22_max %>% 
     filter(is_comp == T, num_of_columns == m) %>% 
     arrange(desc(row_number()))
   for (i in 1:nrow(entries)) {
