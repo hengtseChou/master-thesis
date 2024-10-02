@@ -154,7 +154,7 @@ for (k in 1:nrow(filtered)) {
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(filtered, result)
 result <- result %>%
-  filter(num_of_columns >= 11) %>%
+  filter(num_of_columns >= 10) %>%
   group_by(num_of_columns) %>%
   filter(s22_max == max(s22_max, na.rm=TRUE))
 write.csv(result, "s32_case1.csv", row.names = F)
