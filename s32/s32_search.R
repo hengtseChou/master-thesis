@@ -147,14 +147,16 @@ for (k in 1:nrow(filtered)) {
   
   good_B[k] <- vec_to_str(b_columns)
   s22_max[k] <- count_pairs(D, 2)
-  if (k %% 20 == 0) cat("No. ", k, " done.\n")
-  if (k == nrow(filtered)) cat("No .", k, " done.\nAll completed.\n")
+  if (k %% 20 == 0) cat("No.", k, "done.\n")
+  if (k == nrow(filtered)) cat("No.", k, "done.\nAll completed.\n")
 }
 
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(filtered, result)
 result <- result %>%
-  filter(num_of_columns >= 10)
+  filter(num_of_columns >= 11) %>%
+  group_by(num_of_columns) %>%
+  filter(s22_max == max(s22_max, na.rm=TRUE))
 write.csv(result, "s32_case1.csv", row.names = F)
 
 # -------------------------------------------------------------------------------------- #

@@ -40,7 +40,7 @@ get_b_set <- function(a_columns, s) {
 }
 
 s22 <- function(d, s){
-  # count: if stratififed, c(0,0) should appear $count times
+  # count: if stratified, c(0,0) should appear $count times
   count <- nrow(d) / s ^ 4
   pairs <- combn(ncol(d), 2)
   has_s22 <- rep(1, ncol(pairs))
@@ -142,14 +142,16 @@ for (k in 1:nrow(filtered)) {
   
   good_B[k] <- vec_to_str(b_columns)
   s22_max[k] <- count_pairs(D, 3)
-  if (k %% 20 == 0) cat("No. ", k, " done.\n")
-  if (k == nrow(filtered)) cat("No .", k, " done.\nAll completed.\n")
+  if (k %% 20 == 0) cat("No.", k, "done.\n")
+  if (k == nrow(filtered)) cat("No.", k, "done.\nAll completed.\n")
 }
 
 result <- data.frame(b_columns=good_B, s22_max=s22_max)
 result <- cbind(filtered, result)
 result <- result %>%
-  filter(num_of_columns >= 11)
+  filter(num_of_columns >= 11) %>%
+  group_by(num_of_columns) %>%
+  filter(s22_max == max(s22_max, na.rm=TRUE))
 write.csv(result, "s81_case1.csv", row.names = F)
 
 # -------------------------------------------------------------------------------------- #
